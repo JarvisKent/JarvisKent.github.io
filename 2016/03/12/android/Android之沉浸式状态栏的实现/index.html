@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android之沉浸式状态栏的实现 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="沉浸式状态栏确切的说应该叫做透明状态栏。一般情况下，状态栏的底色都为黑色，而沉浸式状态栏则是把状态栏设置为透明或者半透明。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android之沉浸式状态栏的实现">
+<meta property="og:url" content="http://yoursite.com/2016/03/12/android/Android之沉浸式状态栏的实现/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="沉浸式状态栏确切的说应该叫做透明状态栏。一般情况下，状态栏的底色都为黑色，而沉浸式状态栏则是把状态栏设置为透明或者半透明。">
+<meta property="og:updated_time" content="2016-03-12T14:01:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android之沉浸式状态栏的实现">
+<meta name="twitter:description" content="沉浸式状态栏确切的说应该叫做透明状态栏。一般情况下，状态栏的底色都为黑色，而沉浸式状态栏则是把状态栏设置为透明或者半透明。">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android/Android之沉浸式状态栏的实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/12/android/Android之沉浸式状态栏的实现/" class="article-date">
+  <time datetime="2016-03-12T13:07:30.000Z" itemprop="datePublished">2016-03-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android之沉浸式状态栏的实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>沉浸式状态栏确切的说应该叫做透明状态栏。一般情况下，状态栏的底色都为黑色，而沉浸式状态栏则是把状态栏设置为透明或者半透明。<a id="more"></a></p>
+<h1 id="为什么要使用沉浸式状态栏"><a href="#为什么要使用沉浸式状态栏" class="headerlink" title="为什么要使用沉浸式状态栏"></a>为什么要使用沉浸式状态栏</h1><p>沉浸式状态栏是从android Kitkat（Android 4.4）开始出现的,它可以被设置成与APP顶部相同的颜色，这就使得切换APP时，整个界面就好似切换到了与APP相同的风格样式一样。在内容展示上会显得更加美观。</p>
+<h1 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h1><p>需要注意的是，<strong>因为沉浸式状态栏是在Android4.4的时候出现的，所以只有4.4及以后的版本才能使用。</strong>实现沉浸式状态栏的方式有几种，最简单的方式就是使用系统提供的方式进行实现。</p>
+<h2 id="系统提供的方法"><a href="#系统提供的方法" class="headerlink" title="系统提供的方法"></a>系统提供的方法</h2><ol>
+<li>在需要实现沉浸式状态栏的Activity的布局中添加以下参数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">android:fitsSystemWindows=&quot;true&quot;</div><div class="line">android:clipToPadding=&quot;true&quot;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>代码中对当前系统进行判断，符合要求（即系统是4.4或以上的版本）则设置成透明状态栏</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">private void initState() &#123;</div><div class="line">  if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</div><div class="line"> 		//透明状态栏</div><div class="line">    	getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);</div><div class="line">        //透明导航栏</div><div class="line">        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在Activity的setContentView()方法后面调用第二步骤的方法即可。</p>
+</li>
+</ol>
+<p>我在使用小米手机测试这个方法的时候出现了两种情况</p>
+<ul>
+<li>当我没有在布局中设置clipToPadding为true的时候，会对应用的顶部Toolbar进行拉伸；</li>
+<li>当我在布局中两个参数都进行设置后，顶部状态栏变成了白色。</li>
+</ul>
+<p>因此，我使用了第二种方法：添加隐藏布局，动态调整布局高度适应状态栏</p>
+<h2 id="动态适应状态栏高度设置布局"><a href="#动态适应状态栏高度设置布局" class="headerlink" title="动态适应状态栏高度设置布局"></a>动态适应状态栏高度设置布局</h2><p>因为第一部会出现的拉伸问题，所以我在Toolbar上方添加了一个隐藏LinearLayout，动态设置与状态栏等高，抵消Toolbar拉伸。</p>
+<ol>
+<li><p>在xml布局的顶部添加一个隐藏布局</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;LinearLayout</div><div class="line">        android:id=&quot;@+id/ll&quot;</div><div class="line">        android:layout_width=&quot;fill_parent&quot;</div><div class="line">        android:layout_height=&quot;1dp&quot;</div><div class="line">        android:orientation=&quot;vertical&quot;</div><div class="line">        android:background=&quot;#e7abff&quot;&lt;!--颜色被我设置成了与Toolbar一样--&gt;</div><div class="line">        android:visibility=&quot;gone&quot;&gt;</div><div class="line">    &lt;/LinearLayout&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>代码中判断系统版本，并通过反射设置隐藏布局高度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">* 动态的设置状态栏  实现沉浸式状态栏</div><div class="line">*/</div><div class="line">private void initState() &#123;</div><div class="line"></div><div class="line">    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">        //透明状态栏</div><div class="line">        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);</div><div class="line">        //透明导航栏</div><div class="line">        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);</div><div class="line">        </div><div class="line">        LinearLayout linear_bar = (LinearLayout) findViewById(R.id.ll_bar);</div><div class="line">        linear_bar.setVisibility(View.VISIBLE);</div><div class="line">        //获取到状态栏的高度</div><div class="line">        int statusHeight = getStatusBarHeight();</div><div class="line">        //动态的设置隐藏布局的高度</div><div class="line">        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linear_bar.getLayoutParams();</div><div class="line">        params.height = statusHeight;</div><div class="line">        linear_bar.setLayoutParams(params);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">/**</div><div class="line">* 通过反射的方式获取状态栏高度</div><div class="line">* @return</div><div class="line">*/</div><div class="line">private int getStatusBarHeight() &#123;</div><div class="line">    try &#123;</div><div class="line">        Class&lt;?&gt; c = Class.forName(&quot;com.android.internal.R$dimen&quot;);</div><div class="line">        Object obj = c.newInstance();</div><div class="line">        Field field = c.getField(&quot;status_bar_height&quot;);</div><div class="line">        int x = Integer.parseInt(field.get(obj).toString());</div><div class="line">        return getResources().getDimensionPixelSize(x);</div><div class="line">    &#125; catch (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">     return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>上述步骤完成后同样也是在Activity中的setContentView()后进行调用即可。</p>
+</li>
+</ol>
+<h2 id="使用第三方库进行实现"><a href="#使用第三方库进行实现" class="headerlink" title="使用第三方库进行实现"></a>使用第三方库进行实现</h2><p>在github上也有开源的库提供使用，如：<a href="https://github.com/jgilfelt/SystemBarTint" target="_blank" rel="external">SystemBarTint</a></p>
+<p>不得不说开源的力量是如此的强大。使用方法在连接里有介绍，这里就不复述了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/12/android/Android之沉浸式状态栏的实现/" data-id="cjgw238r4001h54nwt4toenvr" class="article-share-link">Delen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/06/android/Android之序列化浅析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          Android之序列化浅析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/09/java/EffectiveJava2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">(2)、对于所有对象都通用的方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categorieën</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android群英传/">Android群英传</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Effective-Java笔记/">Effective Java笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rabbitMQ/">rabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Labels</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ADB命令/">ADB命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySql/">MySql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Struts2、Spring、Hibernate/">Struts2、Spring、Hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cxf/">cxf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/effect-java/">effect java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exchange的类型及RPC的实现/">exchange的类型及RPC的实现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe标签，js/">iframe标签，js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ环境搭建/">rabbitMQ环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/与运算/">与运算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/串/">串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单体模式/">单体模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原型模式/">原型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原生控件的拓展/">原生控件的拓展</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令模式/">命令模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备忘录模式/">备忘录模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/外观模式/">外观模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实现全新的View/">实现全新的View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对象/">对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂模式/">工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构绪论/">数据结构绪论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/栈和队列/">栈和队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树/">树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/桥接模式/">桥接模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板方法模式/">模板方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/状态模式/">状态模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/百度地图/">百度地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/策略模式/">策略模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/类与接口/">类与接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统架构/">系统架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性表/">线性表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组合模式/">组合模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/职责链模式/">职责链模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义View/">自定义View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观察者模式/">观察者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计原则/">设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/访问权限控制，private、public、protected的区分/">访问权限控制，private、public、protected的区分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/迭代器模式/">迭代器模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/适配器模式/">适配器模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ADB命令/" style="font-size: 10px;">ADB命令</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MyBatis/" style="font-size: 10px;">MyBatis</a> <a href="/tags/MySql/" style="font-size: 10px;">MySql</a> <a href="/tags/SpringMVC/" style="font-size: 10px;">SpringMVC</a> <a href="/tags/Struts2、Spring、Hibernate/" style="font-size: 10px;">Struts2、Spring、Hibernate</a> <a href="/tags/Web-Service/" style="font-size: 10px;">Web Service</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/cxf/" style="font-size: 10px;">cxf</a> <a href="/tags/effect-java/" style="font-size: 16.67px;">effect java</a> <a href="/tags/exchange的类型及RPC的实现/" style="font-size: 10px;">exchange的类型及RPC的实现</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/iframe标签，js/" style="font-size: 10px;">iframe标签，js</a> <a href="/tags/maven/" style="font-size: 13.33px;">maven</a> <a href="/tags/rabbitMQ环境搭建/" style="font-size: 10px;">rabbitMQ环境搭建</a> <a href="/tags/rabbitMQ通信流程/" style="font-size: 10px;">rabbitMQ通信流程</a> <a href="/tags/与运算/" style="font-size: 10px;">与运算</a> <a href="/tags/串/" style="font-size: 10px;">串</a> <a href="/tags/代理模式/" style="font-size: 10px;">代理模式</a> <a href="/tags/单体模式/" style="font-size: 10px;">单体模式</a> <a href="/tags/原型模式/" style="font-size: 10px;">原型模式</a> <a href="/tags/原生控件的拓展/" style="font-size: 10px;">原生控件的拓展</a> <a href="/tags/命令模式/" style="font-size: 10px;">命令模式</a> <a href="/tags/备忘录模式/" style="font-size: 10px;">备忘录模式</a> <a href="/tags/外观模式/" style="font-size: 10px;">外观模式</a> <a href="/tags/实现全新的View/" style="font-size: 10px;">实现全新的View</a> <a href="/tags/对象/" style="font-size: 13.33px;">对象</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/序列化/" style="font-size: 10px;">序列化</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 10px;">抽象工厂模式</a> <a href="/tags/数据结构绪论/" style="font-size: 10px;">数据结构绪论</a> <a href="/tags/栈和队列/" style="font-size: 10px;">栈和队列</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/桥接模式/" style="font-size: 10px;">桥接模式</a> <a href="/tags/模板方法模式/" style="font-size: 10px;">模板方法模式</a> <a href="/tags/沉浸式状态栏/" style="font-size: 10px;">沉浸式状态栏</a> <a href="/tags/状态模式/" style="font-size: 10px;">状态模式</a> <a href="/tags/百度地图/" style="font-size: 10px;">百度地图</a> <a href="/tags/策略模式/" style="font-size: 10px;">策略模式</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/类与接口/" style="font-size: 10px;">类与接口</a> <a href="/tags/系统架构/" style="font-size: 10px;">系统架构</a> <a href="/tags/线性表/" style="font-size: 10px;">线性表</a> <a href="/tags/组合模式/" style="font-size: 10px;">组合模式</a> <a href="/tags/职责链模式/" style="font-size: 10px;">职责链模式</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a> <a href="/tags/装饰模式/" style="font-size: 10px;">装饰模式</a> <a href="/tags/观察者模式/" style="font-size: 10px;">观察者模式</a> <a href="/tags/设计原则/" style="font-size: 10px;">设计原则</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/访问权限控制，private、public、protected的区分/" style="font-size: 10px;">访问权限控制，private、public、protected的区分</a> <a href="/tags/迭代器模式/" style="font-size: 10px;">迭代器模式</a> <a href="/tags/适配器模式/" style="font-size: 10px;">适配器模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/">搭建SpringMVC+MyBatis+MySql框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/24/java/EffectiveJava3/">（3）、类与接口</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/15/java/搭建S2SH框架/">搭建S2SH框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/24/java/web项目添加maven支持/">web项目添加maven支持</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/22/java/使用cxf搭建WebService/">使用cxf搭建WebService</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

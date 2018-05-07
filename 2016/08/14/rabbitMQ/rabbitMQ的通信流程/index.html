@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>（2）、rabbitMQ的通信流程 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在上一篇中，大致介绍了一下rabbitmq（为了方便，以下简称rmq）中一些比较重要的概念，对rabbitmq也算是有了一些的了解。接下来，我们来看看rabbitmq的消息传递的流程，来熟悉和加深对rabbitmq 的了解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（2）、rabbitMQ的通信流程">
+<meta property="og:url" content="http://yoursite.com/2016/08/14/rabbitMQ/rabbitMQ的通信流程/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在上一篇中，大致介绍了一下rabbitmq（为了方便，以下简称rmq）中一些比较重要的概念，对rabbitmq也算是有了一些的了解。接下来，我们来看看rabbitmq的消息传递的流程，来熟悉和加深对rabbitmq 的了解。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/rabbit%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B%E7%9A%84%E9%85%8D%E5%9B%BE.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:updated_time" content="2016-08-14T14:49:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="（2）、rabbitMQ的通信流程">
+<meta name="twitter:description" content="在上一篇中，大致介绍了一下rabbitmq（为了方便，以下简称rmq）中一些比较重要的概念，对rabbitmq也算是有了一些的了解。接下来，我们来看看rabbitmq的消息传递的流程，来熟悉和加深对rabbitmq 的了解。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/rabbit%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B%E7%9A%84%E9%85%8D%E5%9B%BE.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-rabbitMQ/rabbitMQ的通信流程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/14/rabbitMQ/rabbitMQ的通信流程/" class="article-date">
+  <time datetime="2016-08-14T14:22:52.000Z" itemprop="datePublished">2016-08-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/rabbitMQ/">rabbitMQ</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      （2）、rabbitMQ的通信流程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/rabbit%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B%E7%9A%84%E9%85%8D%E5%9B%BE.jpg" alt="配图"><br>在上一篇中，大致介绍了一下rabbitmq（为了方便，以下简称rmq）中一些比较重要的概念，对rabbitmq也算是有了一些的了解。接下来，我们来看看rabbitmq的消息传递的流程，来熟悉和加深对rabbitmq 的了解。<a id="more"></a></p>
+<h1 id="一、rabbitMQ消息传递的流程"><a href="#一、rabbitMQ消息传递的流程" class="headerlink" title="一、rabbitMQ消息传递的流程"></a>一、rabbitMQ消息传递的流程</h1><p><img src="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="rabbitMQ示意图"></p>
+<p>这是一个简单的示意图。从中可以看到，rmq通信的大致流程是：<strong><em>消息的生产者（Producer）与rabbitmq server建立连接，并创建通道（channel）；然后把消息传送至rabbitmq server上指定的Exchange中的queue里存放着；当有消息的消费者（Consumer）监听了这个queue时，就会接收该消息。</em></strong></p>
+<p>其中，消息的消费者和生产者分属于不同应用，这样就能成功的使两个不同的应用通过rabbitmq进行消息的通信，而不用考虑两个应用间直接对接的一些麻烦了。</p>
+<h1 id="二、一些需要事先清楚的细节"><a href="#二、一些需要事先清楚的细节" class="headerlink" title="二、一些需要事先清楚的细节"></a>二、一些需要事先清楚的细节</h1><p>在上面我们讲的通信的流程中，有一些需要注意的东西没有提到；而在真正的使用中，这些细节如果不注意的话会导致一些不必要的麻烦。比如：</p>
+<ul>
+<li><strong>不管是生产者或者消费者，发送消息或监听queue时都需要指定queue，而每个queue都也都需要绑定到一个exchange上。</strong>如果没有事先创建的话，就需要在发送或监听queue前进行声明，即发送消息或监听的时候通知rabbitmq server创建queue和exchange；至少需要声明queue。（注：如果只声明queue不绑定exchange，则会把声明的queue放置到默认的exchange中，默认的exchange是direct类型的，后文会对exchange的类型进行介绍）。如若没有事先创建，且没有进行声明，会造成连不上rabbitmq server的情况。</li>
+<li><strong>创建queue或者exchange是需要对它们进行一些参数的设定。</strong>queue的创建必须设置是否是永久的queue（即queue中的消息会进行备份防止丢失）、是否自动删除（没有用户连接到rabbit server时，队列中的数据会被自动删除）；exchange的创建需要指定类型，是否永久，是否自动删除等等，具体情形可参看文档或通过rabbitmq server进行了解。这里有个坑需要注意，比如，我们事先已经创建了一个永久队列，但是在监听的时候，我们仍可能会进行声明以防止切换环境的时候没有预先创建队列导致连不上。但是，如果声明的队列与事先创建的队列参数设置不一致的话也是有可能导致连不上server的问题的。</li>
+<li><strong>对routingkey的绑定。</strong>在真正使用的时候，我们都会给每个queue进行routingkey的绑定，生产者按routingkey发送消息，接收者按routingkey接收消息，当然如果使用环境比较简单的话，也可以不对routingkey进行绑定。</li>
+</ul>
+<h1 id="三、需要了解，但可能不大会用到的东西"><a href="#三、需要了解，但可能不大会用到的东西" class="headerlink" title="三、需要了解，但可能不大会用到的东西"></a>三、需要了解，但可能不大会用到的东西</h1><p>我们知道消息的消费者和生产者是属于应用端的，而exchange和queue是属于服务端的。在上面的示意图中，可以看出exchange和queue是放在一个叫做virtual host的容器当中，这其实是一个虚拟概念，有点类似于多个工作空间，每个virtual host里包含若干个exchange和queue。在平时使用的时候如果没有对virtual host进行绑定，则默认为rabbitmq server的默认virtual host，如果有创建新的virtual host的话，则在创建exchange和queue时则需要指定。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/08/14/rabbitMQ/rabbitMQ的通信流程/" data-id="cjgw238z5007254nwyy0jcban" class="article-share-link">Delen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/15/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          （3）、exchange类型的使用及RPC的实现.md
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/10/rabbitMQ/rabbitMQ入门及环境搭建/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">（1）、rabbitMQ入门及环境搭建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categorieën</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android群英传/">Android群英传</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Effective-Java笔记/">Effective Java笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rabbitMQ/">rabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Labels</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ADB命令/">ADB命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySql/">MySql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Struts2、Spring、Hibernate/">Struts2、Spring、Hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cxf/">cxf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/effect-java/">effect java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exchange的类型及RPC的实现/">exchange的类型及RPC的实现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe标签，js/">iframe标签，js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ环境搭建/">rabbitMQ环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/与运算/">与运算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/串/">串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单体模式/">单体模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原型模式/">原型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原生控件的拓展/">原生控件的拓展</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令模式/">命令模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备忘录模式/">备忘录模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/外观模式/">外观模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实现全新的View/">实现全新的View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对象/">对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂模式/">工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构绪论/">数据结构绪论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/栈和队列/">栈和队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树/">树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/桥接模式/">桥接模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板方法模式/">模板方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/状态模式/">状态模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/百度地图/">百度地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/策略模式/">策略模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/类与接口/">类与接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统架构/">系统架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性表/">线性表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组合模式/">组合模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/职责链模式/">职责链模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义View/">自定义View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观察者模式/">观察者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计原则/">设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/访问权限控制，private、public、protected的区分/">访问权限控制，private、public、protected的区分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/迭代器模式/">迭代器模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/适配器模式/">适配器模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ADB命令/" style="font-size: 10px;">ADB命令</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MyBatis/" style="font-size: 10px;">MyBatis</a> <a href="/tags/MySql/" style="font-size: 10px;">MySql</a> <a href="/tags/SpringMVC/" style="font-size: 10px;">SpringMVC</a> <a href="/tags/Struts2、Spring、Hibernate/" style="font-size: 10px;">Struts2、Spring、Hibernate</a> <a href="/tags/Web-Service/" style="font-size: 10px;">Web Service</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/cxf/" style="font-size: 10px;">cxf</a> <a href="/tags/effect-java/" style="font-size: 16.67px;">effect java</a> <a href="/tags/exchange的类型及RPC的实现/" style="font-size: 10px;">exchange的类型及RPC的实现</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/iframe标签，js/" style="font-size: 10px;">iframe标签，js</a> <a href="/tags/maven/" style="font-size: 13.33px;">maven</a> <a href="/tags/rabbitMQ环境搭建/" style="font-size: 10px;">rabbitMQ环境搭建</a> <a href="/tags/rabbitMQ通信流程/" style="font-size: 10px;">rabbitMQ通信流程</a> <a href="/tags/与运算/" style="font-size: 10px;">与运算</a> <a href="/tags/串/" style="font-size: 10px;">串</a> <a href="/tags/代理模式/" style="font-size: 10px;">代理模式</a> <a href="/tags/单体模式/" style="font-size: 10px;">单体模式</a> <a href="/tags/原型模式/" style="font-size: 10px;">原型模式</a> <a href="/tags/原生控件的拓展/" style="font-size: 10px;">原生控件的拓展</a> <a href="/tags/命令模式/" style="font-size: 10px;">命令模式</a> <a href="/tags/备忘录模式/" style="font-size: 10px;">备忘录模式</a> <a href="/tags/外观模式/" style="font-size: 10px;">外观模式</a> <a href="/tags/实现全新的View/" style="font-size: 10px;">实现全新的View</a> <a href="/tags/对象/" style="font-size: 13.33px;">对象</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/序列化/" style="font-size: 10px;">序列化</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 10px;">抽象工厂模式</a> <a href="/tags/数据结构绪论/" style="font-size: 10px;">数据结构绪论</a> <a href="/tags/栈和队列/" style="font-size: 10px;">栈和队列</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/桥接模式/" style="font-size: 10px;">桥接模式</a> <a href="/tags/模板方法模式/" style="font-size: 10px;">模板方法模式</a> <a href="/tags/沉浸式状态栏/" style="font-size: 10px;">沉浸式状态栏</a> <a href="/tags/状态模式/" style="font-size: 10px;">状态模式</a> <a href="/tags/百度地图/" style="font-size: 10px;">百度地图</a> <a href="/tags/策略模式/" style="font-size: 10px;">策略模式</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/类与接口/" style="font-size: 10px;">类与接口</a> <a href="/tags/系统架构/" style="font-size: 10px;">系统架构</a> <a href="/tags/线性表/" style="font-size: 10px;">线性表</a> <a href="/tags/组合模式/" style="font-size: 10px;">组合模式</a> <a href="/tags/职责链模式/" style="font-size: 10px;">职责链模式</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a> <a href="/tags/装饰模式/" style="font-size: 10px;">装饰模式</a> <a href="/tags/观察者模式/" style="font-size: 10px;">观察者模式</a> <a href="/tags/设计原则/" style="font-size: 10px;">设计原则</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/访问权限控制，private、public、protected的区分/" style="font-size: 10px;">访问权限控制，private、public、protected的区分</a> <a href="/tags/迭代器模式/" style="font-size: 10px;">迭代器模式</a> <a href="/tags/适配器模式/" style="font-size: 10px;">适配器模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/">搭建SpringMVC+MyBatis+MySql框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/24/java/EffectiveJava3/">（3）、类与接口</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/15/java/搭建S2SH框架/">搭建S2SH框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/24/java/web项目添加maven支持/">web项目添加maven支持</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/22/java/使用cxf搭建WebService/">使用cxf搭建WebService</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

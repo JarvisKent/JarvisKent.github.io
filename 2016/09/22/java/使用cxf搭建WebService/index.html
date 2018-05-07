@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用cxf搭建WebService | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="搭建WebService的框架有不少，之所有用CXF是因为它是Apache维护的一个开源框架，能搭配Spring一起使用且使用上也很简单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用cxf搭建WebService">
+<meta property="og:url" content="http://yoursite.com/2016/09/22/java/使用cxf搭建WebService/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="搭建WebService的框架有不少，之所有用CXF是因为它是Apache维护的一个开源框架，能搭配Spring一起使用且使用上也很简单。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice_bg.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice1.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice2.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice3.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice4.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice5.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/webservice6.jpg">
+<meta property="og:updated_time" content="2016-09-22T14:04:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用cxf搭建WebService">
+<meta name="twitter:description" content="搭建WebService的框架有不少，之所有用CXF是因为它是Apache维护的一个开源框架，能搭配Spring一起使用且使用上也很简单。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/webservice_bg.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-java/使用cxf搭建WebService" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/22/java/使用cxf搭建WebService/" class="article-date">
+  <time datetime="2016-09-22T14:00:24.000Z" itemprop="datePublished">2016-09-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用cxf搭建WebService
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/webservice_bg.jpg" alt="配图"><br>搭建WebService的框架有不少，之所有用CXF是因为它是Apache维护的一个开源框架，能搭配Spring一起使用且使用上也很简单。<a id="more"></a></p>
+<h1 id="一、下载CXF"><a href="#一、下载CXF" class="headerlink" title="一、下载CXF"></a>一、下载CXF</h1><p>可以从Apache下载到最新版的<a href="http://cxf.apache.org/download.html" target="_blank" rel="external">CXF压缩包</a>，jar包包含在压缩包的lib文件夹里面。下载这个主要是为了方便使用命令行。如果我们使用maven的话，也可以直接配置pom.xml文件来加载Spring和CXF，方便省事。还可以跳过第二部，直接看如何创建。</p>
+<h1 id="二、配置CXF到环境变量里"><a href="#二、配置CXF到环境变量里" class="headerlink" title="二、配置CXF到环境变量里"></a>二、配置CXF到环境变量里</h1><p>CXF可以使用命令行来根据服务端（客户端）生成客户端（服务端）代码。也可以根据代码（xml）生成xml文件（代码）。所以，配置一下还是很有必要的。配置环境变量需要去Apache官网上下载CXF的压缩包。</p>
+<p>下载并解压出来，如我解压的位置是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">E:\tools\apache-cxf-3.0.10</div></pre></td></tr></table></figure></p>
+<p>接着，进入配置变量的界面，新建<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">名称为： CXF_Home</div><div class="line">变量值为：E:\tools\apache-cxf-3.0.10</div></pre></td></tr></table></figure></p>
+<p>如图<br><img src="http://obl32g9cf.bkt.clouddn.com/webservice1.jpg" alt="config"></p>
+<p>在path中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">;%CXF_HOME%\bin;</div></pre></td></tr></table></figure></p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/webservice2.jpg" alt="config2"></p>
+<p>需要注意的是，path中添加才需要加bin，如果新建的变量就添加了bin，会因为有些东西是从lib中加载，而路径配置到了bin而加载不到报下面的错,如图<br><img src="http://obl32g9cf.bkt.clouddn.com/webservice3.jpg" alt="config3"></p>
+<p>安装成功的话，输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wsdl2java -v</div></pre></td></tr></table></figure></p>
+<p>会出现如下提示<br><img src="http://obl32g9cf.bkt.clouddn.com/webservice4.jpg" alt="config4"></p>
+<h1 id="三、用myeclipse搭建一个webservice"><a href="#三、用myeclipse搭建一个webservice" class="headerlink" title="三、用myeclipse搭建一个webservice"></a>三、用myeclipse搭建一个webservice</h1><blockquote>
+<p>在搭建项目的时候，我使用了maven来导入cxf的包，而spring的jar包因为以前的项目有配置好的，我直接拿过来用了，所以没有在maven添加了。</p>
+</blockquote>
+<p>webservice的搭建分为两部分，一是服务端，一是客户端。</p>
+<h2 id="1、webservice服务端的搭建"><a href="#1、webservice服务端的搭建" class="headerlink" title="1、webservice服务端的搭建"></a>1、webservice服务端的搭建</h2><ul>
+<li>新建一个名为webservice的web project，勾选上Add Maven support。</li>
+<li><p>项目创建好后在pom.xml这个文件里加入cxf的内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;cxf-api&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.5.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;cxf-rt-frontend-jaxws&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.5.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;cxf-rt-bindings-soap&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.5.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">  &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;cxf-rt-transports-http&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.5.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">   &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;</div><div class="line">   &lt;artifactId&gt;cxf-rt-ws-security&lt;/artifactId&gt;</div><div class="line">   &lt;version&gt;2.5.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>加载完毕后就可以编写接口了，接口代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package com.mycompany.webservice.server;  </div><div class="line">import javax.jws.WebService;</div><div class="line"></div><div class="line">@WebService </div><div class="line">public interface Greeting &#123; </div><div class="line">   public String greeting(String userName); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>实现接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">import java.util.Calendar;</div><div class="line"></div><div class="line">import javax.jws.WebService;</div><div class="line"></div><div class="line">@WebService(endpointInterface = &quot;com.mycompany.webservice.server.Greeting&quot;)</div><div class="line">public class GreetingServiceImpl implements Greeting &#123;</div><div class="line"></div><div class="line"> public String greeting(String userName) &#123;</div><div class="line">  return &quot;Hello &quot; + userName + &quot;, currentTime is &quot;</div><div class="line">    + Calendar.getInstance().getTime();</div><div class="line"> &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在applicationContext.xml进行配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;beans xmlns:jaxws=&quot;http://cxf.apache.org/jaxws&quot; xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</div><div class="line">	http://cxf.apache.org/jaxws</div><div class="line">        http://cxf.apache.org/schemas/jaxws.xsd&quot;&gt;</div><div class="line"></div><div class="line">	&lt;bean id=&quot;greetingServiceImpl&quot; class=&quot;com.mycompany.webservice.server.GreetingServiceImpl&quot; /&gt;</div><div class="line">	&lt;jaxws:endpoint id=&quot;greetingService&quot; implementor=&quot;#greetingServiceImpl&quot; address=&quot;/Greeting&quot; /&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在web.xml进行配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;!--cxf 配置 webservice 服务 --&gt;</div><div class="line"> &lt;servlet&gt;  </div><div class="line">        &lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;  </div><div class="line">        &lt;servlet-class&gt;org.apache.cxf.transport.servlet.CXFServlet&lt;/servlet-class&gt;  </div><div class="line">        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;  </div><div class="line">    &lt;/servlet&gt;  </div><div class="line">    &lt;servlet-mapping&gt;  </div><div class="line">        &lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;  </div><div class="line"></div><div class="line">&lt;!--==这个设置很重要，那么我们的webservice的地址就是http://localhost:8080/yourProgramName/webservice/Greeting===--&gt;</div><div class="line">        &lt;url-pattern&gt;/WebService/*&lt;/url-pattern&gt;  </div><div class="line">    &lt;/servlet-mapping&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>到这边，服务端就完成了。发布可以像普通的web project一样发布。发布完毕，访问<a href="http://localhost:8080/webservice/WebService/Greeting?wsdl" target="_blank" rel="external">http://localhost:8080/webservice/WebService/Greeting?wsdl</a>，如果有显示出xml文件的内容来即发布成功。</p>
+<h2 id="2、webService客户端"><a href="#2、webService客户端" class="headerlink" title="2、webService客户端"></a>2、webService客户端</h2><p>用cxf创建webService的客户端有两种方式：</p>
+<ul>
+<li>通过cxf命令行生成客户端代码。</li>
+</ul>
+<p>以之前发布的服务端为例，如果我们要生成它的客户端代码，可通过以下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wsdl2java -client -encoding utf8 -frontend http://localhost:8080/webservice/WebService/Greeting?wsdl</div></pre></td></tr></table></figure></p>
+<p>会自动生成java文件，如下图<br><img src="http://obl32g9cf.bkt.clouddn.com/webservice5.jpg" alt="config5"><br> 其中，Greeting_GreetingServiceImplPort_Client.java是测试类，可直接运行，如有参数，也直接修改参数后使用。</p>
+<ul>
+<li>通过cxf提供的方法直接访问</li>
+</ul>
+<p>如果是通过这个方法来访问，则需要知道提供的接口方法和需要传递的参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import org.apache.cxf.endpoint.Client;</div><div class="line">import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;</div><div class="line">public class Test2 &#123;</div><div class="line">    public static void main(String[] args) throws Exception &#123;</div><div class="line">        JaxWsDynamicClientFactory factory  = JaxWsDynamicClientFactory.newInstance();</div><div class="line">         Client client = (Client) factory.createClient(&quot;http://localhost:8080/webservice/WebService/Greeting?wsdl&quot;);</div><div class="line">                   System.out.println(&quot;invoke webservice...&quot;);</div><div class="line">         Object[] result =  client.invoke(&quot;greeting&quot;, &quot;gray&quot;&#125;);   //第一个参数为方法名，第二个参数为需要传递的参数，如果参数有多个，可使用数组进行传值</div><div class="line">         System.out.println(&quot;message context is:&quot;+result[0]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="四、测试"><a href="#四、测试" class="headerlink" title="四、测试"></a>四、测试</h1><p>当我们服务端运行起来后，运行客户端掉用方法，可看到运行结果<br><img src="http://obl32g9cf.bkt.clouddn.com/webservice6.jpg" alt="config6"><br> 到此，一个简单的webService就搭建好了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/22/java/使用cxf搭建WebService/" data-id="cjgw238u5003954nw2slgdy34" class="article-share-link">Delen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cxf/">cxf</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/24/java/web项目添加maven支持/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          web项目添加maven支持
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/19/java/maven的安装和配置过程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">maven的安装和配置过程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categorieën</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android群英传/">Android群英传</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Effective-Java笔记/">Effective Java笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rabbitMQ/">rabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Labels</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ADB命令/">ADB命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySql/">MySql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Struts2、Spring、Hibernate/">Struts2、Spring、Hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cxf/">cxf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/effect-java/">effect java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exchange的类型及RPC的实现/">exchange的类型及RPC的实现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe标签，js/">iframe标签，js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ环境搭建/">rabbitMQ环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/与运算/">与运算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/串/">串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单体模式/">单体模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原型模式/">原型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原生控件的拓展/">原生控件的拓展</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令模式/">命令模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备忘录模式/">备忘录模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/外观模式/">外观模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实现全新的View/">实现全新的View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对象/">对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂模式/">工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构绪论/">数据结构绪论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/栈和队列/">栈和队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树/">树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/桥接模式/">桥接模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板方法模式/">模板方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/状态模式/">状态模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/百度地图/">百度地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/策略模式/">策略模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/类与接口/">类与接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统架构/">系统架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性表/">线性表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组合模式/">组合模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/职责链模式/">职责链模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义View/">自定义View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观察者模式/">观察者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计原则/">设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/访问权限控制，private、public、protected的区分/">访问权限控制，private、public、protected的区分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/迭代器模式/">迭代器模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/适配器模式/">适配器模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ADB命令/" style="font-size: 10px;">ADB命令</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MyBatis/" style="font-size: 10px;">MyBatis</a> <a href="/tags/MySql/" style="font-size: 10px;">MySql</a> <a href="/tags/SpringMVC/" style="font-size: 10px;">SpringMVC</a> <a href="/tags/Struts2、Spring、Hibernate/" style="font-size: 10px;">Struts2、Spring、Hibernate</a> <a href="/tags/Web-Service/" style="font-size: 10px;">Web Service</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/cxf/" style="font-size: 10px;">cxf</a> <a href="/tags/effect-java/" style="font-size: 16.67px;">effect java</a> <a href="/tags/exchange的类型及RPC的实现/" style="font-size: 10px;">exchange的类型及RPC的实现</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/iframe标签，js/" style="font-size: 10px;">iframe标签，js</a> <a href="/tags/maven/" style="font-size: 13.33px;">maven</a> <a href="/tags/rabbitMQ环境搭建/" style="font-size: 10px;">rabbitMQ环境搭建</a> <a href="/tags/rabbitMQ通信流程/" style="font-size: 10px;">rabbitMQ通信流程</a> <a href="/tags/与运算/" style="font-size: 10px;">与运算</a> <a href="/tags/串/" style="font-size: 10px;">串</a> <a href="/tags/代理模式/" style="font-size: 10px;">代理模式</a> <a href="/tags/单体模式/" style="font-size: 10px;">单体模式</a> <a href="/tags/原型模式/" style="font-size: 10px;">原型模式</a> <a href="/tags/原生控件的拓展/" style="font-size: 10px;">原生控件的拓展</a> <a href="/tags/命令模式/" style="font-size: 10px;">命令模式</a> <a href="/tags/备忘录模式/" style="font-size: 10px;">备忘录模式</a> <a href="/tags/外观模式/" style="font-size: 10px;">外观模式</a> <a href="/tags/实现全新的View/" style="font-size: 10px;">实现全新的View</a> <a href="/tags/对象/" style="font-size: 13.33px;">对象</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/序列化/" style="font-size: 10px;">序列化</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 10px;">抽象工厂模式</a> <a href="/tags/数据结构绪论/" style="font-size: 10px;">数据结构绪论</a> <a href="/tags/栈和队列/" style="font-size: 10px;">栈和队列</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/桥接模式/" style="font-size: 10px;">桥接模式</a> <a href="/tags/模板方法模式/" style="font-size: 10px;">模板方法模式</a> <a href="/tags/沉浸式状态栏/" style="font-size: 10px;">沉浸式状态栏</a> <a href="/tags/状态模式/" style="font-size: 10px;">状态模式</a> <a href="/tags/百度地图/" style="font-size: 10px;">百度地图</a> <a href="/tags/策略模式/" style="font-size: 10px;">策略模式</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/类与接口/" style="font-size: 10px;">类与接口</a> <a href="/tags/系统架构/" style="font-size: 10px;">系统架构</a> <a href="/tags/线性表/" style="font-size: 10px;">线性表</a> <a href="/tags/组合模式/" style="font-size: 10px;">组合模式</a> <a href="/tags/职责链模式/" style="font-size: 10px;">职责链模式</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a> <a href="/tags/装饰模式/" style="font-size: 10px;">装饰模式</a> <a href="/tags/观察者模式/" style="font-size: 10px;">观察者模式</a> <a href="/tags/设计原则/" style="font-size: 10px;">设计原则</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/访问权限控制，private、public、protected的区分/" style="font-size: 10px;">访问权限控制，private、public、protected的区分</a> <a href="/tags/迭代器模式/" style="font-size: 10px;">迭代器模式</a> <a href="/tags/适配器模式/" style="font-size: 10px;">适配器模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/">搭建SpringMVC+MyBatis+MySql框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/24/java/EffectiveJava3/">（3）、类与接口</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/15/java/搭建S2SH框架/">搭建S2SH框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/24/java/web项目添加maven支持/">web项目添加maven支持</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/22/java/使用cxf搭建WebService/">使用cxf搭建WebService</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

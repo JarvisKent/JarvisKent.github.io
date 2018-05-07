@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>搭建SpringMVC+MyBatis+MySql框架 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第一次搭建springmvc+mybatis框架还是踩了不少坑。通过不断的搜索和比对别人的搭建过程，还是让我搭建出来了。于是，打算总结一下我的搭建过程，并附上所需的jar包。希望能帮到下一个要搭建SpringMVC框架的人。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建SpringMVC+MyBatis+MySql框架">
+<meta property="og:url" content="http://yoursite.com/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第一次搭建springmvc+mybatis框架还是踩了不少坑。通过不断的搜索和比对别人的搭建过程，还是让我搭建出来了。于是，打算总结一下我的搭建过程，并附上所需的jar包。希望能帮到下一个要搭建SpringMVC框架的人。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/springmvc_bg.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/springmvc%E4%BE%9D%E8%B5%96%E7%9A%84jar%E5%8C%85.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/springmvc-test.png">
+<meta property="og:updated_time" content="2016-11-29T14:00:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建SpringMVC+MyBatis+MySql框架">
+<meta name="twitter:description" content="第一次搭建springmvc+mybatis框架还是踩了不少坑。通过不断的搜索和比对别人的搭建过程，还是让我搭建出来了。于是，打算总结一下我的搭建过程，并附上所需的jar包。希望能帮到下一个要搭建SpringMVC框架的人。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/springmvc_bg.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-java/搭建SpringMVC-MyBatis-MySql框架" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/" class="article-date">
+  <time datetime="2016-11-29T13:49:15.000Z" itemprop="datePublished">2016-11-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      搭建SpringMVC+MyBatis+MySql框架
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/springmvc_bg.jpg" alt="bg"><br>第一次搭建springmvc+mybatis框架还是踩了不少坑。通过不断的搜索和比对别人的搭建过程，还是让我搭建出来了。于是，打算总结一下我的搭建过程，并附上所需的jar包。希望能帮到下一个要搭建SpringMVC框架的人。<a id="more"></a></p>
+<p>搭建框架的大致步骤是：</p>
+<ul>
+<li>导入相关jar包；</li>
+<li>添加并配置springmvc、mybatis文件；</li>
+<li>在web.xml中配置springmvc和mybatis文件；</li>
+<li>在代码中的使用。</li>
+</ul>
+<h1 id="一、依赖的jar包"><a href="#一、依赖的jar包" class="headerlink" title="一、依赖的jar包"></a>一、依赖的jar包</h1><p>我用到的jar包可以点击<a href="https://share.weiyun.com/51448fa3f540abbfa2ddcdb7cc6c1c43" target="_blank" rel="external">这里</a>下载，主要是spring的框架包，这个可以到<a href="http://www.springsource.org/download" target="_blank" rel="external">官网</a>下载最新版。还有mybatis的jar包，mybatis-spring(<em>这个尽量用最新版的，可以到<a href="http://mvnrepository.com/artifact/org.mybatis/mybatis-spring" target="_blank" rel="external">这里</a>下载,之前搭建的时候因为用的是旧版的，有出现了强转失败的情况，新版则没有。</em>)以及其他相关的jar包。具体如下图</p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/springmvc%E4%BE%9D%E8%B5%96%E7%9A%84jar%E5%8C%85.png" alt="springmvc_jar"></p>
+<h1 id="二、添加springmvc-servlet-xml配置文件"><a href="#二、添加springmvc-servlet-xml配置文件" class="headerlink" title="二、添加springmvc-servlet.xml配置文件"></a>二、添加springmvc-servlet.xml配置文件</h1><p>这个文件我是放到WEB-INF目录下（这个路径在后面web.xml配置中需要用到）。主要配置了需要注解驱动、扫描包文件、已经jsp路径，代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">    xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot; </div><div class="line">    xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</div><div class="line">    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</div><div class="line">    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</div><div class="line">    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd</div><div class="line">    http://www.springframework.org/schema/context</div><div class="line">    http://www.springframework.org/schema/context/spring-context-3.2.xsd </div><div class="line">    http://www.springframework.org/schema/mvc</div><div class="line">    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd&quot;&gt;  </div><div class="line">      </div><div class="line">     &lt;!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射--&gt;  </div><div class="line">     &lt;mvc:annotation-driven /&gt;  </div><div class="line">     &lt;!-- 启动包扫描功能，以便注册带有@Controller、@Service、@repository、@Component等注解的类成为spring的bean --&gt;  </div><div class="line">     &lt;context:component-scan base-package=&quot;com.jarvis&quot; /&gt;  </div><div class="line">     </div><div class="line">    &lt;!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 --&gt;</div><div class="line">    &lt;bean</div><div class="line">        class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">     </div><div class="line">     &lt;!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀,除了index.jsp，其他jsp页面都放在了WEB-INF/view下面了。 --&gt;  </div><div class="line">     &lt;bean class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot; p:prefix=&quot;/WEB-INF/view/&quot; p:suffix=&quot;.jsp&quot; /&gt;  </div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="三、配置mybatis"><a href="#三、配置mybatis" class="headerlink" title="三、配置mybatis"></a>三、配置mybatis</h1><h2 id="（1）、spring-mybatis配置文件"><a href="#（1）、spring-mybatis配置文件" class="headerlink" title="（1）、spring-mybatis配置文件"></a>（1）、spring-mybatis配置文件</h2><p>1、前提是mysql数据库已经装好，且测试正常。那么，接下来就是配置mybatis文件了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</div><div class="line">    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</div><div class="line">    xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;</div><div class="line">    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans  </div><div class="line">                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  </div><div class="line">                        http://www.springframework.org/schema/context  </div><div class="line">                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  </div><div class="line">                        http://www.springframework.org/schema/mvc  </div><div class="line">                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd&quot;&gt;</div><div class="line">    &lt;!-- 自动扫描,dao目录下的接口文件 --&gt;</div><div class="line">    &lt;context:component-scan base-package=&quot;com.jarvis.dao&quot; /&gt;</div><div class="line">    &lt;!-- 引入配置文件 --&gt;</div><div class="line">    &lt;bean id=&quot;propertyConfigurer&quot;</div><div class="line">        class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;&gt;</div><div class="line">        &lt;property name=&quot;location&quot; value=&quot;classpath:datasource.properties&quot; /&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">    &lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;</div><div class="line">        destroy-method=&quot;close&quot;&gt;</div><div class="line">        &lt;property name=&quot;driverClassName&quot; value=&quot;$&#123;driver&#125;&quot; /&gt;</div><div class="line">        &lt;property name=&quot;url&quot; value=&quot;$&#123;url&#125;&quot; /&gt;</div><div class="line">        &lt;property name=&quot;username&quot; value=&quot;$&#123;username&#125;&quot; /&gt;</div><div class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;password&#125;&quot; /&gt;</div><div class="line">        &lt;!-- 初始化连接大小 --&gt;</div><div class="line">        &lt;property name=&quot;initialSize&quot; value=&quot;$&#123;initialSize&#125;&quot;&gt;&lt;/property&gt;</div><div class="line">        &lt;!-- 连接池最大数量 --&gt;</div><div class="line">        &lt;property name=&quot;maxActive&quot; value=&quot;$&#123;maxActive&#125;&quot;&gt;&lt;/property&gt;</div><div class="line">        &lt;!-- 连接池最大空闲 --&gt;</div><div class="line">        &lt;property name=&quot;maxIdle&quot; value=&quot;$&#123;maxIdle&#125;&quot;&gt;&lt;/property&gt;</div><div class="line">        &lt;!-- 连接池最小空闲 --&gt;</div><div class="line">        &lt;property name=&quot;minIdle&quot; value=&quot;$&#123;minIdle&#125;&quot;&gt;&lt;/property&gt;</div><div class="line">        &lt;!-- 获取连接最大等待时间 --&gt;</div><div class="line">        &lt;property name=&quot;maxWait&quot; value=&quot;$&#123;maxWait&#125;&quot;&gt;&lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">    &lt;!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 --&gt;</div><div class="line">    &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;</div><div class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;</div><div class="line">        &lt;!-- 自动扫描mapping.xml文件 --&gt;</div><div class="line">        &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath:com/jarvis/mapping/*.xml&quot;&gt;&lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">    &lt;!-- DAO接口所在包名，Spring会自动查找其下的类 --&gt;</div><div class="line">    &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;</div><div class="line">        &lt;property name=&quot;basePackage&quot; value=&quot;com.jarvis.dao&quot; /&gt;</div><div class="line">        &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot;&gt;&lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">    &lt;!-- (事务管理)transaction manager, use JtaTransactionManager for global tx --&gt;</div><div class="line">    &lt;bean id=&quot;transactionManager&quot;</div><div class="line">        class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;</div><div class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="（2）、mysql配置参数"><a href="#（2）、mysql配置参数" class="headerlink" title="（2）、mysql配置参数"></a>（2）、mysql配置参数</h2><p>在上面的配置文件中，可以看到参数是通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 引入配置文件 --&gt;</div><div class="line">   &lt;bean id=&quot;propertyConfigurer&quot;</div><div class="line">       class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;&gt;</div><div class="line">       &lt;property name=&quot;location&quot; value=&quot;classpath:datasource.properties&quot; /&gt;</div><div class="line">   &lt;/bean&gt;</div></pre></td></tr></table></figure></p>
+<p>来引入的，引入的文件为datasource.properties，添加properties文件主要是为了方便数据库配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">driver=com.mysql.jdbc.Driver</div><div class="line">#访问地址和端口号，test为数据库名</div><div class="line">url=jdbc:mysql://127.0.0.1:3306/test</div><div class="line">#用户名</div><div class="line">username=root</div><div class="line">#密码</div><div class="line">password=123456</div><div class="line">#定义初始连接数</div><div class="line">initialSize=0</div><div class="line">#定义最大连接数</div><div class="line">maxActive=20</div><div class="line">#定义最大空闲</div><div class="line">maxIdle=20</div><div class="line">#定义最小空闲</div><div class="line">minIdle=1</div><div class="line">#定义最长等待时间</div><div class="line">maxWait=60000</div></pre></td></tr></table></figure></p>
+<h1 id="四、配置web-xml"><a href="#四、配置web-xml" class="headerlink" title="四、配置web.xml"></a>四、配置web.xml</h1><p>基本的配置文件都写完后，需要在web.xml配置把它们配置进去，才能在项目启动时加载它们。web.xml配置如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">    xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:web=&quot;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</div><div class="line">    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;</div><div class="line">    id=&quot;WebApp_ID&quot; version=&quot;3.0&quot;&gt;</div><div class="line">    </div><div class="line">    &lt;!-- Spring和mybatis的配置文件 --&gt;</div><div class="line">    &lt;context-param&gt;</div><div class="line">        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">        &lt;param-value&gt;/WEB-INF/spring-servlet.xml,</div><div class="line">        classpath*:spring-mybatis.xml&lt;/param-value&gt;</div><div class="line">    &lt;/context-param&gt;</div><div class="line">    &lt;listener&gt;</div><div class="line">        &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;</div><div class="line">    &lt;/listener&gt;</div><div class="line">    &lt;!-- 配置spring核心servlet --&gt;</div><div class="line">    &lt;servlet&gt;</div><div class="line">        &lt;servlet-name&gt;spring&lt;/servlet-name&gt;</div><div class="line">        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</div><div class="line">    &lt;/servlet&gt;</div><div class="line">    &lt;!-- url-pattern配置为/，不带文件后缀，会造成其它静态文件(js，css等)不能访问。如配为*.do，则不影响静态文件的访问 --&gt;</div><div class="line">    &lt;servlet-mapping&gt;</div><div class="line">        &lt;servlet-name&gt;spring&lt;/servlet-name&gt;</div><div class="line">        &lt;url-pattern&gt;/&lt;/url-pattern&gt;</div><div class="line">    &lt;/servlet-mapping&gt;</div><div class="line">    &lt;!-- 编码过滤器 --&gt;</div><div class="line">    &lt;filter&gt;</div><div class="line">        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;</div><div class="line">        &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</div><div class="line">         &lt;async-supported&gt;true&lt;/async-supported&gt;</div><div class="line">        &lt;init-param&gt;</div><div class="line">            &lt;param-name&gt;encoding&lt;/param-name&gt;</div><div class="line">            &lt;param-value&gt;UTF-8&lt;/param-value&gt;</div><div class="line">        &lt;/init-param&gt;</div><div class="line">    &lt;/filter&gt;</div><div class="line">    &lt;filter-mapping&gt;</div><div class="line">        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;</div><div class="line">        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">    &lt;/filter-mapping&gt;</div><div class="line">    &lt;!-- 防止Spring内存溢出监听器 --&gt;</div><div class="line">    &lt;listener&gt;</div><div class="line">        &lt;listener-class&gt;org.springframework.web.util.IntrospectorCleanupListener&lt;/listener-class&gt;</div><div class="line">    &lt;/listener&gt;</div><div class="line">    &lt;welcome-file-list&gt;</div><div class="line">        &lt;welcome-file&gt;/index.jsp&lt;/welcome-file&gt;</div><div class="line">    &lt;/welcome-file-list&gt;</div><div class="line">    &lt;!-- 配置SESSION超时，单位是分钟 --&gt;</div><div class="line">    &lt;session-config&gt;</div><div class="line">        &lt;session-timeout&gt;15&lt;/session-timeout&gt;</div><div class="line">    &lt;/session-config&gt;</div><div class="line">&lt;/web-app&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="五、使用流程"><a href="#五、使用流程" class="headerlink" title="五、使用流程"></a>五、使用流程</h1><p>到这边的话，就基本是配置完了。接下来，就来看看如何使用了。首先，我们假设一个业务流程，根据用户的id来获取用户名，并显示到页面上。</p>
+<h2 id="1、添加表及数据"><a href="#1、添加表及数据" class="headerlink" title="1、添加表及数据"></a>1、添加表及数据</h2><p>我在mysql中创建了一个test数据库，并添加了一个user的表</p>
+<ul>
+<li>建表语句<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">create table user </div><div class="line">( </div><div class="line">id INT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT &apos;编号&apos;, </div><div class="line">name varchar(32) NOT NULL  COMMENT &apos;姓名&apos;,</div><div class="line">password varchar(128) NOT NULL  COMMENT &apos;密码&apos;</div><div class="line"></div><div class="line">);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>添加的数据<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">insert into user values(2,&quot;test&quot;,&quot;123456&quot;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="2、添加constroller"><a href="#2、添加constroller" class="headerlink" title="2、添加constroller"></a>2、添加constroller</h2><p>首先是在com.jarvis包下添加一个constroller包，专门用来方式constroller。然后创建一个LoginConstroller.java，代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">package com.jarvis.constroller;</div><div class="line"></div><div class="line">import javax.annotation.Resource;</div><div class="line">import javax.servlet.http.HttpServletRequest;</div><div class="line">import javax.servlet.http.HttpServletResponse;</div><div class="line"></div><div class="line">import org.springframework.stereotype.Controller;</div><div class="line">import org.springframework.ui.ModelMap;</div><div class="line">import org.springframework.web.bind.annotation.PathVariable;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.servlet.ModelAndView;</div><div class="line"></div><div class="line">import com.jarvis.pojo.User;</div><div class="line">import com.jarvis.serv.IUserService;</div><div class="line"></div><div class="line">@Controller  </div><div class="line">@RequestMapping(&quot;/user&quot;)</div><div class="line">public class LoginConstroller &#123;</div><div class="line">	</div><div class="line">	@Resource</div><div class="line">	private IUserService userService;</div><div class="line">	</div><div class="line">	 public LoginConstroller() &#123;&#125;  </div><div class="line">	    @RequestMapping(value = &quot;/login/&#123;id&#125;&quot;, method = RequestMethod.GET)  </div><div class="line">	    public ModelAndView myMethod(HttpServletRequest request,HttpServletResponse response,   </div><div class="line">	            @PathVariable(&quot;id&quot;) String id, ModelMap modelMap) throws Exception &#123;  </div><div class="line">	      </div><div class="line">                User users = userService.getUserById(Integer.valueOf(id));</div><div class="line">	        modelMap.put(&quot;loginUser&quot;, users.getUserName());  </div><div class="line">	        return new ModelAndView(&quot;/login/hello&quot;, modelMap);  </div><div class="line">	    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面这个方法是通过url传入id，然后通过id查询数据库，并取出用户，信息输入用户名，然后跳转到/login下的hello.jsp。从这个类中可以看到，除了查询数据库的service外，还有一个pojo类User。接下来，就先创建pojo类。</p>
+<h2 id="3、添加pojo"><a href="#3、添加pojo" class="headerlink" title="3、添加pojo"></a>3、添加pojo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">package com.jarvis.pojo;</div><div class="line">public class User &#123;</div><div class="line">    private Integer id;</div><div class="line">    private String userName;</div><div class="line">    private String password;</div><div class="line">    public Integer getId() &#123;</div><div class="line">        return id;</div><div class="line">    &#125;</div><div class="line">    public void setId(Integer id) &#123;</div><div class="line">        this.id = id;</div><div class="line">    &#125;</div><div class="line">    public String getUserName() &#123;</div><div class="line">        return userName;</div><div class="line">    &#125;</div><div class="line">    public void setUserName(String userName) &#123;</div><div class="line">        this.userName = userName == null ? null : userName.trim();</div><div class="line">    &#125;</div><div class="line">    public String getPassword() &#123;</div><div class="line">        return password;</div><div class="line">    &#125;</div><div class="line">    public void setPassword(String password) &#123;</div><div class="line">        this.password = password == null ? null : password.trim();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4、添加userService"><a href="#4、添加userService" class="headerlink" title="4、添加userService"></a>4、添加userService</h2><p>这边需要注意的是，在controller中使用到的userService，是通过注解来完成，而注解的名称就是userService。所以在添加userService时，需要注意一下，不要写错了。</p>
+<ul>
+<li><p>先添加一个接口IUserService</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">package com.jarvis.serv;</div><div class="line">import com.jarvis.pojo.User;</div><div class="line">public interface IUserService &#123;</div><div class="line">    public User getUserById(int userId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加实现类UserServiceImpl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">package com.jarvis.serv.impl;</div><div class="line"></div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.beans.factory.annotation.Qualifier;</div><div class="line">import org.springframework.stereotype.Service;</div><div class="line"></div><div class="line">import com.jarvis.dao.IUserDao;</div><div class="line">import com.jarvis.pojo.User;</div><div class="line">import com.jarvis.serv.IUserService;</div><div class="line"></div><div class="line">@Service(&quot;userService&quot;)</div><div class="line">public class UserServiceImpl implements IUserService &#123;</div><div class="line">	@Autowired</div><div class="line">    @Qualifier(&quot;IUserDao&quot;)</div><div class="line">	private IUserDao IUserDao;</div><div class="line">	@Override</div><div class="line">	public User getUserById(int userId) &#123;</div><div class="line">		return this.IUserDao.selectByPrimaryKey(userId);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这里用到的IUserDao是直接在UserServiceImpl这个类中注解的。</p>
+<h2 id="5、添加dao"><a href="#5、添加dao" class="headerlink" title="5、添加dao"></a>5、添加dao</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">package com.jarvis.dao;</div><div class="line"></div><div class="line">import org.springframework.transaction.annotation.Isolation;</div><div class="line">import org.springframework.transaction.annotation.Propagation;</div><div class="line">import org.springframework.transaction.annotation.Transactional;</div><div class="line"></div><div class="line">import com.jarvis.pojo.User;</div><div class="line">@Transactional(propagation=Propagation.REQUIRES_NEW,readOnly=false,isolation=Isolation.DEFAULT)</div><div class="line">public interface IUserDao &#123;</div><div class="line">    User selectByPrimaryKey(Integer id);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="6、添加dao对应的mapper文件"><a href="#6、添加dao对应的mapper文件" class="headerlink" title="6、添加dao对应的mapper文件"></a>6、添加dao对应的mapper文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</div><div class="line">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot; &gt;</div><div class="line">&lt;mapper namespace=&quot;com.jarvis.dao.IUserDao&quot; &gt;</div><div class="line"></div><div class="line">  &lt;resultMap id=&quot;BaseResultMap&quot; type=&quot;com.jarvis.pojo.User&quot; &gt;</div><div class="line">    &lt;id column=&quot;id&quot; property=&quot;id&quot; jdbcType=&quot;INTEGER&quot; /&gt;</div><div class="line">    &lt;result column=&quot;name&quot; property=&quot;userName&quot; jdbcType=&quot;VARCHAR&quot; /&gt;</div><div class="line">    &lt;result column=&quot;password&quot; property=&quot;password&quot; jdbcType=&quot;VARCHAR&quot; /&gt;</div><div class="line">  &lt;/resultMap&gt;</div><div class="line"></div><div class="line">  &lt;sql id=&quot;Base_Column_List&quot; &gt;</div><div class="line">    id, name, password</div><div class="line">  &lt;/sql&gt;</div><div class="line"></div><div class="line">  &lt;select id=&quot;selectByPrimaryKey&quot; resultMap=&quot;BaseResultMap&quot; parameterType=&quot;java.lang.Integer&quot; &gt;</div><div class="line">    select </div><div class="line"> &lt;include refid=&quot;Base_Column_List&quot; /&gt;</div><div class="line">   from user where id = #&#123;id,jdbcType=INTEGER&#125;</div><div class="line">  &lt;/select&gt;</div><div class="line"></div><div class="line">&lt;/mapper&gt;</div></pre></td></tr></table></figure>
+<h2 id="7、添加对应的页面"><a href="#7、添加对应的页面" class="headerlink" title="7、添加对应的页面"></a>7、添加对应的页面</h2><p>因为在springmvc-servlet中，我们把页面的路径放到了WEB-INF目录下的view目录，而在LoginController中返回的路径是login下的hello.jsp,所以，我们首先要在WEB-INF下创建一个view目录，在view下，创建一个login目录，在login目录下创建一个名为hello的jsp文件。<br>hello.jsp的代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; import=&quot;java.util.*&quot; pageEncoding=&quot;UTF-8&quot;%&gt;  </div><div class="line">&lt;%  </div><div class="line">String path = request.getContextPath();  </div><div class="line">String basePath = request.getScheme()+&quot;://&quot;+request.getServerName()+&quot;:&quot;+request.getServerPort()+path+&quot;/&quot;;  </div><div class="line">%&gt;  </div><div class="line">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;  </div><div class="line">&lt;html&gt;  </div><div class="line">&lt;head&gt;  </div><div class="line">&lt;base href=&quot;&lt;%=basePath%&gt;&quot;&gt;  </div><div class="line">&lt;title&gt;My JSP &apos;hello.jsp&apos; starting page&lt;/title&gt;  </div><div class="line">&lt;meta http-equiv=&quot;pragma&quot; content=&quot;no-cache&quot;&gt;  </div><div class="line">&lt;meta http-equiv=&quot;cache-control&quot; content=&quot;no-cache&quot;&gt;  </div><div class="line">&lt;/head&gt;  </div><div class="line">&lt;body&gt;  </div><div class="line">    你好:&lt;%=request.getAttribute(&quot;loginUser&quot;) %&gt;，现在时间是&lt;%= new Date() %&gt;  </div><div class="line">&lt;/body&gt;  </div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="8、测试"><a href="#8、测试" class="headerlink" title="8、测试"></a>8、测试</h2><p>到这边，就可以开始测试了。不过首先，我们要搞清楚访问的url。首先肯定是<a href="http://ip:端口/项目名，然后是看LoginController中，类的@RequestMapping是&quot;/user&quot;,方法的@RequestMapping是&quot;/login/{id}&quot;。其中的{id}是我们要传的值。所以，访问的url是" target="_blank" rel="external">http://ip:端口/项目名，然后是看LoginController中，类的@RequestMapping是&quot;/user&quot;,方法的@RequestMapping是&quot;/login/{id}&quot;。其中的{id}是我们要传的值。所以，访问的url是</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:8080/项目名/user/login/id</div></pre></td></tr></table></figure></p>
+<p>运行效果如下：</p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/springmvc-test.png" alt="运行效果"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/" data-id="cjgw238u9003c54nwmblxkz9r" class="article-share-link">Delen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySql/">MySql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/24/java/EffectiveJava3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">（3）、类与接口</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categorieën</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android群英传/">Android群英传</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Effective-Java笔记/">Effective Java笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rabbitMQ/">rabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Labels</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ADB命令/">ADB命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySql/">MySql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Struts2、Spring、Hibernate/">Struts2、Spring、Hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cxf/">cxf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/effect-java/">effect java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exchange的类型及RPC的实现/">exchange的类型及RPC的实现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe标签，js/">iframe标签，js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ环境搭建/">rabbitMQ环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/与运算/">与运算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/串/">串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单体模式/">单体模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原型模式/">原型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原生控件的拓展/">原生控件的拓展</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令模式/">命令模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备忘录模式/">备忘录模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/外观模式/">外观模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实现全新的View/">实现全新的View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对象/">对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂模式/">工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构绪论/">数据结构绪论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/栈和队列/">栈和队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树/">树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/桥接模式/">桥接模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板方法模式/">模板方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/状态模式/">状态模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/百度地图/">百度地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/策略模式/">策略模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/类与接口/">类与接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统架构/">系统架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性表/">线性表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组合模式/">组合模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/职责链模式/">职责链模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义View/">自定义View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观察者模式/">观察者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计原则/">设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/访问权限控制，private、public、protected的区分/">访问权限控制，private、public、protected的区分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/迭代器模式/">迭代器模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/适配器模式/">适配器模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ADB命令/" style="font-size: 10px;">ADB命令</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MyBatis/" style="font-size: 10px;">MyBatis</a> <a href="/tags/MySql/" style="font-size: 10px;">MySql</a> <a href="/tags/SpringMVC/" style="font-size: 10px;">SpringMVC</a> <a href="/tags/Struts2、Spring、Hibernate/" style="font-size: 10px;">Struts2、Spring、Hibernate</a> <a href="/tags/Web-Service/" style="font-size: 10px;">Web Service</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/cxf/" style="font-size: 10px;">cxf</a> <a href="/tags/effect-java/" style="font-size: 16.67px;">effect java</a> <a href="/tags/exchange的类型及RPC的实现/" style="font-size: 10px;">exchange的类型及RPC的实现</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/iframe标签，js/" style="font-size: 10px;">iframe标签，js</a> <a href="/tags/maven/" style="font-size: 13.33px;">maven</a> <a href="/tags/rabbitMQ环境搭建/" style="font-size: 10px;">rabbitMQ环境搭建</a> <a href="/tags/rabbitMQ通信流程/" style="font-size: 10px;">rabbitMQ通信流程</a> <a href="/tags/与运算/" style="font-size: 10px;">与运算</a> <a href="/tags/串/" style="font-size: 10px;">串</a> <a href="/tags/代理模式/" style="font-size: 10px;">代理模式</a> <a href="/tags/单体模式/" style="font-size: 10px;">单体模式</a> <a href="/tags/原型模式/" style="font-size: 10px;">原型模式</a> <a href="/tags/原生控件的拓展/" style="font-size: 10px;">原生控件的拓展</a> <a href="/tags/命令模式/" style="font-size: 10px;">命令模式</a> <a href="/tags/备忘录模式/" style="font-size: 10px;">备忘录模式</a> <a href="/tags/外观模式/" style="font-size: 10px;">外观模式</a> <a href="/tags/实现全新的View/" style="font-size: 10px;">实现全新的View</a> <a href="/tags/对象/" style="font-size: 13.33px;">对象</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/序列化/" style="font-size: 10px;">序列化</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 10px;">抽象工厂模式</a> <a href="/tags/数据结构绪论/" style="font-size: 10px;">数据结构绪论</a> <a href="/tags/栈和队列/" style="font-size: 10px;">栈和队列</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/桥接模式/" style="font-size: 10px;">桥接模式</a> <a href="/tags/模板方法模式/" style="font-size: 10px;">模板方法模式</a> <a href="/tags/沉浸式状态栏/" style="font-size: 10px;">沉浸式状态栏</a> <a href="/tags/状态模式/" style="font-size: 10px;">状态模式</a> <a href="/tags/百度地图/" style="font-size: 10px;">百度地图</a> <a href="/tags/策略模式/" style="font-size: 10px;">策略模式</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/类与接口/" style="font-size: 10px;">类与接口</a> <a href="/tags/系统架构/" style="font-size: 10px;">系统架构</a> <a href="/tags/线性表/" style="font-size: 10px;">线性表</a> <a href="/tags/组合模式/" style="font-size: 10px;">组合模式</a> <a href="/tags/职责链模式/" style="font-size: 10px;">职责链模式</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a> <a href="/tags/装饰模式/" style="font-size: 10px;">装饰模式</a> <a href="/tags/观察者模式/" style="font-size: 10px;">观察者模式</a> <a href="/tags/设计原则/" style="font-size: 10px;">设计原则</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/访问权限控制，private、public、protected的区分/" style="font-size: 10px;">访问权限控制，private、public、protected的区分</a> <a href="/tags/迭代器模式/" style="font-size: 10px;">迭代器模式</a> <a href="/tags/适配器模式/" style="font-size: 10px;">适配器模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/">搭建SpringMVC+MyBatis+MySql框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/24/java/EffectiveJava3/">（3）、类与接口</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/15/java/搭建S2SH框架/">搭建S2SH框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/24/java/web项目添加maven支持/">web项目添加maven支持</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/22/java/使用cxf搭建WebService/">使用cxf搭建WebService</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

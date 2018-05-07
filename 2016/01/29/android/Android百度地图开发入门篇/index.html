@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android百度地图开发应用入门 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近，公司要做的项目需要使用到百度地图。来学习一下关于百度地图如何使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android百度地图开发应用入门">
+<meta property="og:url" content="http://yoursite.com/2016/01/29/android/Android百度地图开发入门篇/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近，公司要做的项目需要使用到百度地图。来学习一下关于百度地图如何使用。">
+<meta property="og:image" content="http://7xpi7i.com1.z0.glb.clouddn.com/%E7%99%BE%E5%BA%A6%E5%88%9B%E5%BB%BA%E5%9C%B0%E5%9B%BE%E5%BA%94%E7%94%A8.jpg">
+<meta property="og:image" content="http://7xpi7i.com1.z0.glb.clouddn.com/%E5%BC%80%E5%8F%91%E5%8C%85%E5%AF%BC%E5%85%A5.jpg">
+<meta property="og:image" content="http://7xpi7i.com1.z0.glb.clouddn.com/%E5%AE%9A%E4%BD%8D%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C%E5%9B%BE.jpg">
+<meta property="og:updated_time" content="2016-02-27T07:18:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android百度地图开发应用入门">
+<meta name="twitter:description" content="最近，公司要做的项目需要使用到百度地图。来学习一下关于百度地图如何使用。">
+<meta name="twitter:image" content="http://7xpi7i.com1.z0.glb.clouddn.com/%E7%99%BE%E5%BA%A6%E5%88%9B%E5%BB%BA%E5%9C%B0%E5%9B%BE%E5%BA%94%E7%94%A8.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android/Android百度地图开发入门篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/29/android/Android百度地图开发入门篇/" class="article-date">
+  <time datetime="2016-01-29T01:48:46.000Z" itemprop="datePublished">2016-01-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android百度地图开发应用入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近，公司要做的项目需要使用到百度地图。来学习一下关于百度地图如何使用。<a id="more"></a><br>要使用百度地图，需要先注册一个百度账号，获取到地图的SDK和秘钥，导入到自己的项目中才能使用。</p>
+<h1 id="秘钥和SDK"><a href="#秘钥和SDK" class="headerlink" title="秘钥和SDK"></a>秘钥和SDK</h1><p>秘钥的申请需要项目的包名和SHA1值。所以，需要先创建好项目再进行秘钥的申请。</p>
+<h2 id="申请秘钥"><a href="#申请秘钥" class="headerlink" title="申请秘钥"></a>申请秘钥</h2><p>要申请秘钥需要到<a href="http://lbsyun.baidu.com" target="_blank" rel="external">百度地图开放平台</a>申请。当然，百度有提供相应的教程，步骤我就不再列出来了。这边需要注意的是创建应用的时候。</p>
+<p><img src="http://7xpi7i.com1.z0.glb.clouddn.com/%E7%99%BE%E5%BA%A6%E5%88%9B%E5%BB%BA%E5%9C%B0%E5%9B%BE%E5%BA%94%E7%94%A8.jpg" alt="创建应用"></p>
+<p>应用类型，因为我是在Android上开发的，所以选的是<strong>Android SDK</strong>。数字签名（SHA1）的值使用的是签名文件的SHA1的值，因为我没有导出APK测试，直接运行到手机上，所以用的是测试证书，测试证书的SHA1可以在eclipse中的<strong><em>Window-preferences中的Android-Build</em></strong>获取。包名则是在清单文件AndroidManifest.xml中的package。我创建的项目是FreeMap，包名是“com.jarvis.freemap”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    package=&quot;com.jarvis.freemap&quot;</div><div class="line">    android:versionCode=&quot;1&quot;</div><div class="line">    android:versionName=&quot;1.0&quot; &gt;</div></pre></td></tr></table></figure></p>
+<p>应用创建完毕后，就可以得到秘钥了。</p>
+<h2 id="下载SDK"><a href="#下载SDK" class="headerlink" title="下载SDK"></a>下载SDK</h2><p><a href="http://lbsyun.baidu.com/sdk/download" target="_blank" rel="external">百度SDK下载</a></p>
+<p>这个根据自己的需求下载相应的开发包就可以了。我因为想熟悉一下百度地图，所以下了全部的开发包。开发包下完后是导入到项目的lib中的。</p>
+<p><img src="http://7xpi7i.com1.z0.glb.clouddn.com/%E5%BC%80%E5%8F%91%E5%8C%85%E5%AF%BC%E5%85%A5.jpg" alt="开发包导入"></p>
+<h1 id="必要的配置"><a href="#必要的配置" class="headerlink" title="必要的配置"></a>必要的配置</h1><h2 id="权限添加"><a href="#权限添加" class="headerlink" title="权限添加"></a>权限添加</h2><p>要使用百度地图，需要额权限可不少，权限需添加到清单文件中AndroidManifest.xml中，需要的权限有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 这个权限用于进行网络定位 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot; /&gt;</div><div class="line">&lt;!-- 这个权限用于访问GPS定位 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot; /&gt;</div><div class="line">&lt;!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;</div><div class="line">&lt;!-- 获取运营商信息，用于支持提供运营商信息相关的接口 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;</div><div class="line">&lt;!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot; /&gt;</div><div class="line">&lt;!-- 用于读取手机当前的状态 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot; /&gt;</div><div class="line">&lt;!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;</div><div class="line">&lt;!-- 访问网络，网络定位需要上网 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</div><div class="line">&lt;!-- SD卡读取权限，用户写入离线定位数据 --&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.MOUNT_UNMOUNT_FILESYSTEMS&quot; /&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="服务添加"><a href="#服务添加" class="headerlink" title="服务添加"></a>服务添加</h2><p>需要添加一个百度的远程服务到清单文件中的application中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;service</div><div class="line">    android:name=&quot;com.baidu.location.f&quot;</div><div class="line">    android:enabled=&quot;true&quot;</div><div class="line">    android:process=&quot;:remote&quot; &gt;</div><div class="line">&lt;/service&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="添加秘钥"><a href="#添加秘钥" class="headerlink" title="添加秘钥"></a>添加秘钥</h2><p>秘钥也是在清单文件中的application中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;com.baidu.lbsapi.API_KEY&quot;</div><div class="line">    android:value=&quot;your api-key&quot; /&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>百度提供的测试方法是创建一个mapView，运行看是否有生成地图来测试是否配置正确。我们这边要进行的是定位测试，以文本形式展现出来。官方有提供相应的demo可参考。</p>
+<h2 id="添加默认配置"><a href="#添加默认配置" class="headerlink" title="添加默认配置"></a>添加默认配置</h2><p>对定位的一些基本参数进行配置，需要修改配置的话也是在这个类中进行修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line">public class LocationService &#123;</div><div class="line">	private LocationClient client = null;</div><div class="line">	private LocationClientOption mOption,DIYoption;</div><div class="line">	private Object  objLock = new Object();</div><div class="line"></div><div class="line">	/***</div><div class="line">	 * </div><div class="line">	 * @param locationContext</div><div class="line">	 */</div><div class="line">	public LocationService(Context locationContext)&#123;</div><div class="line">		synchronized (objLock) &#123;</div><div class="line">			if(client == null)&#123;</div><div class="line">				client = new LocationClient(locationContext);</div><div class="line">				client.setLocOption(getDefaultLocationClientOption());</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/***</div><div class="line">	 * </div><div class="line">	 * @param listener</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	</div><div class="line">	public boolean registerListener(BDLocationListener listener)&#123;</div><div class="line">		boolean isSuccess = false;</div><div class="line">		if(listener != null)&#123;</div><div class="line">			client.registerLocationListener(listener);</div><div class="line">			isSuccess = true;</div><div class="line">		&#125;</div><div class="line">		return  isSuccess;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public void unregisterListener(BDLocationListener listener)&#123;</div><div class="line">		if(listener != null)&#123;</div><div class="line">			client.unRegisterLocationListener(listener);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/***</div><div class="line">	 * @param option</div><div class="line">	 * @return isSuccessSetOption</div><div class="line">	 */</div><div class="line">	public boolean setLocationOption(LocationClientOption option)&#123;</div><div class="line">		boolean isSuccess = false;</div><div class="line">		if(option != null)&#123;</div><div class="line">			if(client.isStarted())</div><div class="line">				client.stop();</div><div class="line">			DIYoption = option;</div><div class="line">			client.setLocOption(option);</div><div class="line">		&#125;</div><div class="line">		return isSuccess;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public LocationClientOption getOption()&#123;</div><div class="line">		return DIYoption;</div><div class="line">	&#125;</div><div class="line">	/***</div><div class="line">	 * @return DefaultLocationClientOption</div><div class="line">	 */</div><div class="line">	public LocationClientOption getDefaultLocationClientOption()&#123;</div><div class="line">		if(mOption == null)&#123;</div><div class="line">			mOption = new LocationClientOption();</div><div class="line">			mOption.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备</div><div class="line">			mOption.setCoorType(&quot;bd09ll&quot;);//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;</div><div class="line">			mOption.setScanSpan(3000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的</div><div class="line">		    mOption.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要</div><div class="line">		    mOption.setIsNeedLocationDescribe(true);//可选，设置是否需要地址描述</div><div class="line">		    mOption.setNeedDeviceDirect(false);//可选，设置是否需要设备方向结果</div><div class="line">		    mOption.setLocationNotify(false);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果</div><div class="line">		    mOption.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死   </div><div class="line">		    mOption.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”</div><div class="line">		    mOption.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到</div><div class="line">		    mOption.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集</div><div class="line">		&#125;</div><div class="line">		return mOption;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public void start()&#123;</div><div class="line">		synchronized (objLock) &#123;</div><div class="line">			if(client != null &amp;&amp; !client.isStarted())&#123;</div><div class="line">				client.start();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	public void stop()&#123;</div><div class="line">		synchronized (objLock) &#123;</div><div class="line">			if(client != null &amp;&amp; client.isStarted())&#123;</div><div class="line">				client.stop();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="主要逻辑"><a href="#主要逻辑" class="headerlink" title="主要逻辑"></a>主要逻辑</h2><p>展示页面上只添加一个Button和一个TextView两个组件。在进行使用之前也需要一些必要的初始化，这里为了简便，全部都整合到了同一个Activity类中，项目中使用的话，不建议这么写。</p>
+<h3 id="初始化SDK"><a href="#初始化SDK" class="headerlink" title="初始化SDK"></a>初始化SDK</h3><p>在使用之前需要先初始化一下百度sdk。这个初始化建议在自定义的Applicaition中进行。需要注意的是，初始化SDK必须在setContentView()之前进行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">locationService = new LocationService(getApplicationContext());</div><div class="line">mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);</div><div class="line">SDKInitializer.initialize(getApplicationContext());</div></pre></td></tr></table></figure></p>
+<h3 id="监听的方法"><a href="#监听的方法" class="headerlink" title="监听的方法"></a>监听的方法</h3><p>这边我是直接拷贝demo中的方法来使用，也可根据自己的需要进行修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">private BDLocationListener mListener = new BDLocationListener() &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void onReceiveLocation(BDLocation location) &#123;</div><div class="line">		if(null != location &amp;&amp; location.getLocType() != BDLocation.TypeServerError)&#123;</div><div class="line">			StringBuffer sb = new StringBuffer(256);</div><div class="line">			sb.append(&quot;time: &quot;);</div><div class="line">			/**</div><div class="line">			 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；</div><div class="line">			 * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变</div><div class="line">			 */</div><div class="line">			sb.append(location.getTime());</div><div class="line">			sb.append(&quot;\nerror code : &quot;);</div><div class="line">			sb.append(location.getLocType());</div><div class="line">			sb.append(&quot;\nlatitude : &quot;);</div><div class="line">			sb.append(location.getLatitude());</div><div class="line">			sb.append(&quot;\nlontitude : &quot;);</div><div class="line">			sb.append(location.getLongitude());</div><div class="line">			sb.append(&quot;\nradius : &quot;);</div><div class="line">			sb.append(location.getRadius());</div><div class="line">			sb.append(&quot;\nCountryCode : &quot;);</div><div class="line">			sb.append(location.getCountryCode());</div><div class="line">			sb.append(&quot;\nCountry : &quot;);</div><div class="line">			sb.append(location.getCountry());</div><div class="line">			sb.append(&quot;\ncitycode : &quot;);</div><div class="line">			sb.append(location.getCityCode());</div><div class="line">			sb.append(&quot;\ncity : &quot;);</div><div class="line">			sb.append(location.getCity());</div><div class="line">			sb.append(&quot;\nDistrict : &quot;);</div><div class="line">			sb.append(location.getDistrict());</div><div class="line">			sb.append(&quot;\nStreet : &quot;);</div><div class="line">			sb.append(location.getStreet());</div><div class="line">			sb.append(&quot;\naddr : &quot;);</div><div class="line">			sb.append(location.getAddrStr());</div><div class="line">			sb.append(&quot;\nDescribe: &quot;);</div><div class="line">			sb.append(location.getLocationDescribe());</div><div class="line">			sb.append(&quot;\nDirection(not all devices have value): &quot;);</div><div class="line">			sb.append(location.getDirection());</div><div class="line">			sb.append(&quot;\nPoi: &quot;);</div><div class="line"></div><div class="line">			if(location.getPoiList() != null &amp;&amp; !location.getPoiList().isEmpty())&#123;</div><div class="line">				for (int i = 0; i &lt; location.getPoiList().size(); i++) &#123;</div><div class="line">					Poi poi = (Poi) location.getPoiList().get(i);</div><div class="line">					sb.append(poi.getName() +&quot;;&quot;);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			if(location.getLocType() == BDLocation.TypeGpsLocation)&#123;</div><div class="line">				//GPS定位结果</div><div class="line">				sb.append(&quot;\nspeed : &quot;);</div><div class="line">				sb.append(location.getSpeed());// 单位：km/h</div><div class="line">				sb.append(&quot;\nsatellite : &quot;);</div><div class="line">				sb.append(location.getSatelliteNumber());</div><div class="line">				sb.append(&quot;\nheight : &quot;);</div><div class="line">				sb.append(location.getAltitude());// 单位：米</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;gps定位成功&quot;);</div><div class="line">			&#125;else if(location.getLocType() == BDLocation.TypeNetWorkLocation)&#123;</div><div class="line">				// 网络定位结果</div><div class="line">				// 运营商信息</div><div class="line">				sb.append(&quot;\noperationers : &quot;);</div><div class="line">				sb.append(location.getOperators());</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;网络定位成功&quot;);</div><div class="line">			&#125;else if (location.getLocType() == BDLocation.TypeOffLineLocation) &#123;// 离线定位结果</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;离线定位成功，离线定位结果也是有效的&quot;);</div><div class="line">			&#125; else if (location.getLocType() == BDLocation.TypeServerError) &#123;</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因&quot;);</div><div class="line">			&#125; else if (location.getLocType() == BDLocation.TypeNetWorkException) &#123;</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;网络不同导致定位失败，请检查网络是否通畅&quot;);</div><div class="line">			&#125; else if (location.getLocType() == BDLocation.TypeCriteriaException) &#123;</div><div class="line">				sb.append(&quot;\ndescribe : &quot;);</div><div class="line">				sb.append(&quot;无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机&quot;);</div><div class="line">			&#125;</div><div class="line">			logMsg(sb.toString());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="注册与注销监听"><a href="#注册与注销监听" class="headerlink" title="注册与注销监听"></a>注册与注销监听</h3><p>用Activity的生命周期，对监听进行注册和注销<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/***</div><div class="line"> * Stop location service</div><div class="line"> */</div><div class="line">@Override</div><div class="line">protected void onStop() &#123;</div><div class="line">	// TODO Auto-generated method stub</div><div class="line">	locationService.unregisterListener(mListener); //注销掉监听</div><div class="line">	locationService.stop(); //停止定位服务</div><div class="line">	super.onStop();</div><div class="line">&#125;</div><div class="line">@Override</div><div class="line">protected void onStart() &#123;</div><div class="line">	super.onStart();</div><div class="line">	//location config</div><div class="line">	locationService.registerListener(mListener);</div><div class="line">	//注册监听</div><div class="line">	int type = getIntent().getIntExtra(&quot;from&quot;, 0);</div><div class="line">	if(type == 0)&#123;</div><div class="line">		locationService.setLocationOption(locationService.getDefaultLocationClientOption());</div><div class="line">	&#125;else if(type == 1)&#123;</div><div class="line">		locationService.setLocationOption(locationService.getOption());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	getLocation.setOnClickListener(new OnClickListener() &#123;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void onClick(View v) &#123;</div><div class="line">			if(getLocation.getText().toString().equals(&quot;单点定位&quot;))&#123;</div><div class="line">				locationService.start();</div><div class="line">				getLocation.setText(&quot;定位ING&quot;);</div><div class="line">			&#125;else&#123;</div><div class="line">				locationService.stop();</div><div class="line">				getLocation.setText(&quot;单点定位&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="获取信息展现"><a href="#获取信息展现" class="headerlink" title="获取信息展现"></a>获取信息展现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public void logMsg(String str) &#123;</div><div class="line">	try &#123;</div><div class="line">		if (showLocation != null)&#123;</div><div class="line">			showLocation.setText(str);</div><div class="line">		&#125;</div><div class="line">	&#125; catch (Exception e) &#123;</div><div class="line">		e.printStackTrace();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="测试效果"><a href="#测试效果" class="headerlink" title="测试效果"></a>测试效果</h3><ol>
+<li>一个简单的定位测试功能就完成了，测试效果如下</li>
+</ol>
+<p><img src="http://7xpi7i.com1.z0.glb.clouddn.com/%E5%AE%9A%E4%BD%8D%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C%E5%9B%BE.jpg" alt="运行效果图"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/01/29/android/Android百度地图开发入门篇/" data-id="cjgw238sp002a54nwsnzs2sht" class="article-share-link">Delen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/百度地图/">百度地图</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/04/java/EffectiveJava1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          (1)、创建和销毁对象
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/26/Designpattern/CommandPattern/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">设计模式之命令模式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categorieën</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android群英传/">Android群英传</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Effective-Java笔记/">Effective Java笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rabbitMQ/">rabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Labels</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ADB命令/">ADB命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySql/">MySql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringMVC/">SpringMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Struts2、Spring、Hibernate/">Struts2、Spring、Hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web-Service/">Web Service</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cxf/">cxf</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/effect-java/">effect java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exchange的类型及RPC的实现/">exchange的类型及RPC的实现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iframe标签，js/">iframe标签，js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ环境搭建/">rabbitMQ环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ通信流程/">rabbitMQ通信流程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/与运算/">与运算</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/串/">串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代理模式/">代理模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单体模式/">单体模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原型模式/">原型模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/原生控件的拓展/">原生控件的拓展</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令模式/">命令模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备忘录模式/">备忘录模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/外观模式/">外观模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实现全新的View/">实现全新的View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对象/">对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂模式/">工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构绪论/">数据结构绪论</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/栈和队列/">栈和队列</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树/">树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/桥接模式/">桥接模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板方法模式/">模板方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/沉浸式状态栏/">沉浸式状态栏</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/状态模式/">状态模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/百度地图/">百度地图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/策略模式/">策略模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/类与接口/">类与接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/系统架构/">系统架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线性表/">线性表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/组合模式/">组合模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/职责链模式/">职责链模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义View/">自定义View</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/观察者模式/">观察者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计原则/">设计原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/访问权限控制，private、public、protected的区分/">访问权限控制，private、public、protected的区分</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/迭代器模式/">迭代器模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/适配器模式/">适配器模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ADB命令/" style="font-size: 10px;">ADB命令</a> <a href="/tags/Android-Studio/" style="font-size: 10px;">Android Studio</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/MyBatis/" style="font-size: 10px;">MyBatis</a> <a href="/tags/MySql/" style="font-size: 10px;">MySql</a> <a href="/tags/SpringMVC/" style="font-size: 10px;">SpringMVC</a> <a href="/tags/Struts2、Spring、Hibernate/" style="font-size: 10px;">Struts2、Spring、Hibernate</a> <a href="/tags/Web-Service/" style="font-size: 10px;">Web Service</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/cxf/" style="font-size: 10px;">cxf</a> <a href="/tags/effect-java/" style="font-size: 16.67px;">effect java</a> <a href="/tags/exchange的类型及RPC的实现/" style="font-size: 10px;">exchange的类型及RPC的实现</a> <a href="/tags/hexo/" style="font-size: 16.67px;">hexo</a> <a href="/tags/iframe标签，js/" style="font-size: 10px;">iframe标签，js</a> <a href="/tags/maven/" style="font-size: 13.33px;">maven</a> <a href="/tags/rabbitMQ环境搭建/" style="font-size: 10px;">rabbitMQ环境搭建</a> <a href="/tags/rabbitMQ通信流程/" style="font-size: 10px;">rabbitMQ通信流程</a> <a href="/tags/与运算/" style="font-size: 10px;">与运算</a> <a href="/tags/串/" style="font-size: 10px;">串</a> <a href="/tags/代理模式/" style="font-size: 10px;">代理模式</a> <a href="/tags/单体模式/" style="font-size: 10px;">单体模式</a> <a href="/tags/原型模式/" style="font-size: 10px;">原型模式</a> <a href="/tags/原生控件的拓展/" style="font-size: 10px;">原生控件的拓展</a> <a href="/tags/命令模式/" style="font-size: 10px;">命令模式</a> <a href="/tags/备忘录模式/" style="font-size: 10px;">备忘录模式</a> <a href="/tags/外观模式/" style="font-size: 10px;">外观模式</a> <a href="/tags/实现全新的View/" style="font-size: 10px;">实现全新的View</a> <a href="/tags/对象/" style="font-size: 13.33px;">对象</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/序列化/" style="font-size: 10px;">序列化</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 10px;">抽象工厂模式</a> <a href="/tags/数据结构绪论/" style="font-size: 10px;">数据结构绪论</a> <a href="/tags/栈和队列/" style="font-size: 10px;">栈和队列</a> <a href="/tags/树/" style="font-size: 10px;">树</a> <a href="/tags/桥接模式/" style="font-size: 10px;">桥接模式</a> <a href="/tags/模板方法模式/" style="font-size: 10px;">模板方法模式</a> <a href="/tags/沉浸式状态栏/" style="font-size: 10px;">沉浸式状态栏</a> <a href="/tags/状态模式/" style="font-size: 10px;">状态模式</a> <a href="/tags/百度地图/" style="font-size: 10px;">百度地图</a> <a href="/tags/策略模式/" style="font-size: 10px;">策略模式</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/类与接口/" style="font-size: 10px;">类与接口</a> <a href="/tags/系统架构/" style="font-size: 10px;">系统架构</a> <a href="/tags/线性表/" style="font-size: 10px;">线性表</a> <a href="/tags/组合模式/" style="font-size: 10px;">组合模式</a> <a href="/tags/职责链模式/" style="font-size: 10px;">职责链模式</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a> <a href="/tags/装饰模式/" style="font-size: 10px;">装饰模式</a> <a href="/tags/观察者模式/" style="font-size: 10px;">观察者模式</a> <a href="/tags/设计原则/" style="font-size: 10px;">设计原则</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/访问权限控制，private、public、protected的区分/" style="font-size: 10px;">访问权限控制，private、public、protected的区分</a> <a href="/tags/迭代器模式/" style="font-size: 10px;">迭代器模式</a> <a href="/tags/适配器模式/" style="font-size: 10px;">适配器模式</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/11/29/java/搭建SpringMVC-MyBatis-MySql框架/">搭建SpringMVC+MyBatis+MySql框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/24/java/EffectiveJava3/">（3）、类与接口</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/15/java/搭建S2SH框架/">搭建S2SH框架</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/24/java/web项目添加maven支持/">web项目添加maven支持</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/22/java/使用cxf搭建WebService/">使用cxf搭建WebService</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="/js/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
