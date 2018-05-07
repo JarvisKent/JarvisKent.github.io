@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="exchange的类型及RPC的实现," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在上一篇里，我们讲了rabbitMQ的通信流程。接下来，通过代码来实现exchange的几种类型，看一下rabbitMQ是如何运用的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（3）、exchange类型的使用及RPC的实现.md">
+<meta property="og:url" content="http://huangzihao.me/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="在上一篇里，我们讲了rabbitMQ的通信流程。接下来，通过代码来实现exchange的几种类型，看一下rabbitMQ是如何运用的。">
+<meta property="og:updated_time" content="2016-08-26T15:10:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="（3）、exchange类型的使用及RPC的实现.md">
+<meta name="twitter:description" content="在上一篇里，我们讲了rabbitMQ的通信流程。接下来，通过代码来实现exchange的几种类型，看一下rabbitMQ是如何运用的。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/"/>
+
+
+
+
+
+  <title>（3）、exchange类型的使用及RPC的实现.md | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">（3）、exchange类型的使用及RPC的实现.md</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-15T23:00:05+08:00">
+                2016-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">rabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在上一篇里，我们讲了rabbitMQ的通信流程。接下来，通过代码来实现exchange的几种类型，看一下rabbitMQ是如何运用的。<a id="more"></a></p>
+<h1 id="exchange几种类型的实现方式"><a href="#exchange几种类型的实现方式" class="headerlink" title="exchange几种类型的实现方式"></a>exchange几种类型的实现方式</h1><h2 id="fanout"><a href="#fanout" class="headerlink" title="fanout"></a>fanout</h2><p>如果一个exchange的类型被定义为fanout，那么发送到该exchange上的消息会发送给所有监听该exchange的queue中。Fanout类型的exchange不需要处理routingkey，只需要队列监听该exchange就能接收到消息，类似于广播。</p>
+<p>接下来，来看一下代码中的实现，首先是消息的消费者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class ReceiveLogs &#123;</div><div class="line"></div><div class="line">	private static final String EXCHANGE_NAME = &quot;LOGSs&quot;;</div><div class="line"></div><div class="line">	public static void main(String[] argv) throws Exception &#123;</div><div class="line"></div><div class="line">		ConnectionFactory factory = new ConnectionFactory();</div><div class="line">		factory.setHost(&quot;localhost&quot;);    //设置安装rabbitMQServer的ip，因为我是装本机上，所以直接使用localhost</div><div class="line">		Connection connection = factory.newConnection();</div><div class="line">		Channel channel = connection.createChannel();</div><div class="line"></div><div class="line">		channel.exchangeDeclare(EXCHANGE_NAME, &quot;fanout&quot;);    //声明一个fanout类型的exchange，如果不存在则创建出来</div><div class="line">		//该语句得到一个随机名称的Queue，该queue的类型为non-durable、exclusive、auto-delete的，将该queue绑定到上面的exchange上接收消息。</div><div class="line">		String queueName = channel.queueDeclare().getQueue();  </div><div class="line">		channel.queueBind(queueName, EXCHANGE_NAME, &quot;&quot;);    //通道绑定队列</div><div class="line"></div><div class="line">		System.out.println(&quot; [*] Waiting for messages. To exit press CTRL+C&quot;);</div><div class="line"></div><div class="line">		QueueingConsumer consumer = new QueueingConsumer(channel); //创建消费者</div><div class="line">		channel.basicConsume(queueName, true, consumer);</div><div class="line"></div><div class="line">		while (true) &#123;</div><div class="line">			QueueingConsumer.Delivery delivery = consumer.nextDelivery();</div><div class="line">			String message = new String(delivery.getBody());</div><div class="line">			System.out.println(&quot; [x] Received &apos;&quot; + message + &quot;&apos;&quot;);   </div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>消息发送者</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public class SendMsg&#123;</div><div class="line"></div><div class="line">	private static final String EXCHANGE_NAME = &quot;LOGSs&quot;;</div><div class="line"></div><div class="line">	public static void main(String[] argv) throws Exception &#123;</div><div class="line">		ConnectionFactory factory = new ConnectionFactory();</div><div class="line">		factory.setHost(&quot;localhost&quot;);</div><div class="line"></div><div class="line">		Connection connection = factory.newConnection();</div><div class="line"></div><div class="line">		Channel channel = connection.createChannel();</div><div class="line"></div><div class="line">		channel.exchangeDeclare(EXCHANGE_NAME, &quot;fanout&quot;);    </div><div class="line"></div><div class="line">		String message = &quot;发送的消息&quot;;</div><div class="line"></div><div class="line">		channel.basicPublish(EXCHANGE_NAME, &quot;b&quot;, null, message.getBytes());    //发送消息到exchange中</div><div class="line">		System.out.println(&quot; [x] Sent &apos;&quot; + message + &quot;&apos;&quot;);</div><div class="line"></div><div class="line">		channel.close();    </div><div class="line">		connection.close();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="direct"><a href="#direct" class="headerlink" title="direct"></a>direct</h2><p>发送到类型为direct的exchange的消息，会根据routingkey来判断消息发送给哪个queue。每个绑定该exchange的queue都需要绑定一个routingkey。如果接收到的消息不符合绑定的每一个routingkey，则消息会被抛弃掉。</p>
+<ul>
+<li>消息的消费者：和之前的消费者代码差不多，只是多了绑定routingKey这一步和设置类型改为direct</li>
+</ul>
+<p>···<br>/<em>*
+</em>创建一个名为cplcqueue的绑定了3个routingkey的queue，监听direct类型的名为directExchange的exchange。<br><em>
+</em>/<br>public class ReceiveLogsDirect {<br>    private static final String EXCHANGE_NAME = “directExchange”;</p>
+<pre><code>public static void main(String[] args) throws Exception {
+
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setHost(&quot;localhost&quot;);
+    Connection connection = factory.newConnection();
+
+    Channel channel = connection.createChannel();
+    channel.exchangeDeclare(EXCHANGE_NAME, &quot;direct&quot;,true);
+    String queueName = &quot;cplcqueue&quot;;
+    String[] a = new String[3];
+    a[0] = &quot;cplc_vm_cachedFileRequest35&quot;;
+    a[1] = &quot;cplc_vm_downloadRequest35&quot;;
+    a[2] = &quot;cplc_vm_delFileRequest35&quot;;
+
+    if(a.length &lt;1){
+        System.err.println(&quot;Usage: ReceiveLogsDirect [info] [warning] [error]&quot;);
+        System.exit(1);
+    }
+
+    for(int i=0;i&lt;3;i++){    
+        channel.queueBind(queueName, EXCHANGE_NAME, a[i]);
+    }
+
+    System.out.println(&quot; [*] Waiting for messages. To exit press CTRL+C&quot;);
+
+    QueueingConsumer consumer = new QueueingConsumer(channel);
+    channel.basicConsume(queueName, true, consumer);
+    while (true) {
+        QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+        String message = new String(delivery.getBody());
+        String routingKey = delivery.getEnvelope().getRoutingKey();
+        System.out.println(&quot; [x] Received &apos;&quot; + routingKey + &quot;&apos;:&apos;&quot; + message + &quot;&apos;&quot;);   
+    }
+}
+</code></pre><p>}<br>···</p>
+<ul>
+<li>消息生产者</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public class SendDirect &#123;</div><div class="line">	private static final String EXCHANGE_NAME = &quot;directExchange&quot;;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		ConnectionFactory factory = new ConnectionFactory();</div><div class="line">		factory.setHost(&quot;localhost&quot;);</div><div class="line">		Connection connection = factory.newConnection();</div><div class="line"></div><div class="line">		Channel channel = connection.createChannel();</div><div class="line">		channel.exchangeDeclare(EXCHANGE_NAME, &quot;direct&quot;,true);</div><div class="line">	        String routingKey=&quot;cplc_vm_delFileRequest35&quot;;</div><div class="line">                String message =&quot;发送的消息&quot;;</div><div class="line">               channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes());      //在发送信息的时候需要指定routingKey</div><div class="line">               channel.close();</div><div class="line">               connection.close();      	</div><div class="line">       &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h2><p>发送到类型为topic的exchange的消息，会将消息转发到所有匹配topic的queue上。该exchange会将routingKey与某topic进行模糊匹配，队列需要绑定一个一个topic，可以使用通配符进行模糊匹配，“#”匹配一个或多个，而“<em>”只匹配一个词。如“log.#”可以匹配“log.info.abc”，而“log.</em>”则只会匹配到类似“log.abc”这样后面只有一个词的routingkey。</p>
+<p>topic的消息消费者实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public class ReceiveLogsTopic &#123;</div><div class="line"></div><div class="line">	private static final String EXCHANGE_NAME = &quot;topic_logs&quot;;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		Connection connection = null;</div><div class="line">		Channel channel = null;</div><div class="line">		try &#123;</div><div class="line">			ConnectionFactory factory = new ConnectionFactory();</div><div class="line">			factory.setHost(&quot;localhost&quot;);</div><div class="line"></div><div class="line">			connection = factory.newConnection();</div><div class="line">			channel = connection.createChannel();</div><div class="line"></div><div class="line">			channel.exchangeDeclare(EXCHANGE_NAME, &quot;topic&quot;);</div><div class="line"></div><div class="line">			String queueName = channel.queueDeclare().getQueue();</div><div class="line"></div><div class="line">			if (arg.length &lt; 1)&#123;</div><div class="line">				System.err.println(&quot;Usage: ReceiveLogsTopic [binding_key]...&quot;);</div><div class="line">				System.exit(1);</div><div class="line">			&#125;</div><div class="line">			channel.queueBind(queueName, EXCHANGE_NAME, &quot;st.#&quot;);    </div><div class="line"></div><div class="line">			System.out.println(&quot; [*] Waiting for messages. To exit press CTRL+C&quot;);</div><div class="line"></div><div class="line">			QueueingConsumer consumer = new QueueingConsumer(channel);</div><div class="line">			channel.basicConsume(queueName, true, consumer);</div><div class="line"></div><div class="line">			while (true) &#123;</div><div class="line">				QueueingConsumer.Delivery delivery = consumer.nextDelivery();</div><div class="line">				String message = new String(delivery.getBody());</div><div class="line">				String routingKey = delivery.getEnvelope().getRoutingKey();</div><div class="line">				System.out.println(&quot; [x] Received &apos;&quot; + routingKey + &quot;&apos;:&apos;&quot; + message + &quot;&apos;&quot;);   </div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		catch  (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">		finally &#123;</div><div class="line">			if (connection != null) &#123;</div><div class="line">				try &#123;</div><div class="line">					connection.close();</div><div class="line">				&#125;</div><div class="line">				catch (Exception ignore) &#123;&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>消息发送者实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public class SendTopic &#123;</div><div class="line"></div><div class="line">	private static final String EXCHANGE_NAME = &quot;topic_logs&quot;;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">		Connection connection = null;</div><div class="line">		Channel channel = null;</div><div class="line"></div><div class="line">		try &#123;</div><div class="line">			ConnectionFactory factory = new ConnectionFactory();</div><div class="line">			factory.setHost(&quot;localhost&quot;);</div><div class="line">			connection = factory.newConnection();</div><div class="line">			channel = connection.createChannel();</div><div class="line"></div><div class="line">			channel.exchangeDeclare(EXCHANGE_NAME, &quot;topic&quot;);</div><div class="line"></div><div class="line">			String routingKey = &quot;st.abc.efg&quot;;</div><div class="line">			String message = &quot;发送的消息&quot;;</div><div class="line"></div><div class="line">			channel.basicPublish(EXCHANGE_NAME, routingKey, null, message.getBytes());</div><div class="line">			System.out.println(&quot; [x] Sent &apos;&quot; + routingKey + &quot;&apos;:&apos;&quot; + message + &quot;&apos;&quot;);</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;finally&#123;</div><div class="line">			if(connection !=null)&#123;</div><div class="line">				try &#123;</div><div class="line">					connection.close();</div><div class="line">				&#125; catch (IOException e) &#123;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="headers"><a href="#headers" class="headerlink" title="headers"></a>headers</h2><p>这个类型的exchange基本不会用到，主要是根据发送的消息中所带的header这个参数来判断的。没有进行深入的了解，就不说了。</p>
+<h1 id="RPC的实现"><a href="#RPC的实现" class="headerlink" title="RPC的实现"></a>RPC的实现</h1><p>RPC（远程进程调用）的主要过程是，消费者接收到消息后在对消息进行处理后把处理结果与收到消息的反馈一并发回服务端。这与exchange是哪种类型是无关的，所以，任何一种类型的exchange都可以用来实现rpc模式。</p>
+<p>消息发送者:与普通的消息发送者的区别在于，事先设置不立即对接收到的消息进行反馈，而是发送完消息后监听消息队列，等待返回结果，直到收到结果才关闭通道和连接。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">public class RPCSend&#123;  </div><div class="line">    private Connection connection;  </div><div class="line">    private Channel channel;  </div><div class="line">    private String replyQueueName = &quot;cplcqueue35&quot;;  </div><div class="line">    private QueueingConsumer consumer;  </div><div class="line">  </div><div class="line">    public RPCClient() throws Exception &#123;  </div><div class="line">        ConnectionFactory factory = new ConnectionFactory();  </div><div class="line">        factory.setHost(&quot;localhost&quot;);  </div><div class="line">        connection = factory.newConnection();  </div><div class="line">        channel = connection.createChannel();  </div><div class="line">  </div><div class="line">        consumer = new QueueingConsumer(channel);  </div><div class="line">        channel.basicConsume(replyQueueName, true, consumer);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    public String call(String message) throws Exception &#123;  </div><div class="line">        String response = null;  </div><div class="line">        String corrId = UUID.randomUUID().toString();  </div><div class="line">  </div><div class="line">        BasicProperties props = new BasicProperties();  </div><div class="line">        props.setReplyTo(replyQueueName);  </div><div class="line">        props.setCorrelationId(corrId);  </div><div class="line">  </div><div class="line">        channel.basicPublish(Exchange, RoutingKey, props, message.getBytes());  </div><div class="line">        while (true) &#123;  </div><div class="line">            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  </div><div class="line">            if (delivery.getProperties().getCorrelationId().equals(corrId)) &#123;  </div><div class="line">                response = new String(delivery.getBody());  </div><div class="line">                break;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">        return response;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    public void close() throws Exception &#123;  </div><div class="line">        connection.close();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    public static void main(String[] argv) &#123;  </div><div class="line">        RPCClient fibonacciRpc = null;  </div><div class="line">        String response = null;  </div><div class="line">        try &#123;  </div><div class="line">            fibonacciRpc = new RPCClient();  </div><div class="line">  </div><div class="line">            response = fibonacciRpc.call(&quot;发送的消息&quot;);  </div><div class="line">		    </div><div class="line">            System.out.println(&quot; [.] Got &apos;&quot; + response + &quot;&apos;&quot;);  </div><div class="line">        &#125; catch (Exception e) &#123;  </div><div class="line">            e.printStackTrace();  </div><div class="line">        &#125; finally &#123;  </div><div class="line">            if (fibonacciRpc != null) &#123;  </div><div class="line">                try &#123;  </div><div class="line">                    fibonacciRpc.close();  </div><div class="line">                &#125; catch (Exception ignore) &#123;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>消息消费者：处理完消息后，把应答机制设置为true，把处理结果和消息反馈一起发给服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public class RPCClient &#123;  </div><div class="line">    private Connection connection;  </div><div class="line">    private Channel channel;  </div><div class="line">    private String replyQueueName = &quot;RPC_QUEUE&quot;;  </div><div class="line">    private QueueingConsumer consumer;  </div><div class="line">  </div><div class="line">    public RPCClient() throws Exception &#123;  </div><div class="line">        ConnectionFactory factory = new ConnectionFactory();  </div><div class="line">        factory.setHost(&quot;localhost&quot;);  </div><div class="line">        connection = factory.newConnection();  </div><div class="line">        channel = connection.createChannel();  </div><div class="line">  </div><div class="line">        consumer = new QueueingConsumer(channel);  </div><div class="line">        channel.basicConsume(replyQueueName, true, consumer);  </div><div class="line">    &#125;  </div><div class="line">public void RPCReceiver()&#123;</div><div class="line">	connection = null;</div><div class="line">	channel = null;</div><div class="line">	try &#123;</div><div class="line">		ConnectionFactory factory = new ConnectionFactory();</div><div class="line">		factory.setHost(HOST);</div><div class="line">		connection = factory.newConnection();</div><div class="line">		channel = connection.createChannel();</div><div class="line">		channel.queueDeclare(RPC_QUEUE, true, false, false, null);</div><div class="line">		String routingKey = &quot;routingKey&quot;;</div><div class="line">		channel.queueBind(RPC_QUEUE,EXCHANGE_NAME, routingKey );</div><div class="line">		channel.basicQos(1);</div><div class="line"></div><div class="line">		QueueingConsumer consumer = new QueueingConsumer(channel);</div><div class="line">		channel.basicConsume(RPC_QUEUE, false, consumer);</div><div class="line"></div><div class="line">		do&#123;</div><div class="line">			String response = null;</div><div class="line"></div><div class="line">			QueueingConsumer.Delivery delivery = consumer.nextDelivery();</div><div class="line">			String rout = delivery.getEnvelope().getRoutingKey();</div><div class="line">				BasicProperties props = delivery.getProperties();</div><div class="line">				try &#123;</div><div class="line">					String message = new String(delivery.getBody());</div><div class="line">					</div><div class="line">					response = “处理消息：”+message;</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">					response = &quot;&quot;;</div><div class="line">				&#125; finally &#123;</div><div class="line">					channel.basicPublish(&quot;&quot;, props.getReplyTo(), props,response.getBytes());  </div><div class="line">					channel.basicAck(delivery.getEnvelope().getDeliveryTag(),false);  </div><div class="line">				&#125;</div><div class="line">			</div><div class="line">		&#125;while (true);</div><div class="line">	&#125; catch (Exception e) &#123;</div><div class="line">	&#125; finally &#123;</div><div class="line">		if (connection != null) &#123;</div><div class="line">			try &#123;</div><div class="line">				connection.close();</div><div class="line">			&#125; catch (Exception ignore) &#123;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注：上述代码测试，如果是先运行生产者的话，生产的消息因为还没有queue监听，会暂存在server上，然后再运行消费者的话，server会自动把消息分配给消费者。所以，不管是先运行消费者或者生产者都可以。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/exchange的类型及RPC的实现/" rel="tag"># exchange的类型及RPC的实现</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/rabbitMQ/rabbitMQ的通信流程/" rel="next" title="（2）、rabbitMQ的通信流程">
+                <i class="fa fa-chevron-left"></i> （2）、rabbitMQ的通信流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/数据结构/数据结构第一章/" rel="prev" title="第一章:数据结构绪论">
+                第一章:数据结构绪论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/"
+           data-title="（3）、exchange类型的使用及RPC的实现.md" data-url="http://huangzihao.me/rabbitMQ/rabbitMQ中exchange的类型及RPC的实现/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#exchange几种类型的实现方式"><span class="nav-number">1.</span> <span class="nav-text">exchange几种类型的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fanout"><span class="nav-number">1.1.</span> <span class="nav-text">fanout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#direct"><span class="nav-number">1.2.</span> <span class="nav-text">direct</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#topic"><span class="nav-number">1.3.</span> <span class="nav-text">topic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#headers"><span class="nav-number">1.4.</span> <span class="nav-text">headers</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RPC的实现"><span class="nav-number">2.</span> <span class="nav-text">RPC的实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

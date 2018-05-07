@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android,Android Studio,ADB命令," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这一章，我们要了解一下Android的IDE（集成开发环境）。一款好的IDE不仅能让我们开发事半功倍，也能让我们把更多精力专注在业务逻辑本身，不必过多关注底层细节。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2、Android开发工具接触及ADB命令">
+<meta property="og:url" content="http://huangzihao.me/android_heroes/2、Android开发工具接触/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="这一章，我们要了解一下Android的IDE（集成开发环境）。一款好的IDE不仅能让我们开发事半功倍，也能让我们把更多精力专注在业务逻辑本身，不必过多关注底层细节。">
+<meta property="og:updated_time" content="2016-02-27T07:18:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2、Android开发工具接触及ADB命令">
+<meta name="twitter:description" content="这一章，我们要了解一下Android的IDE（集成开发环境）。一款好的IDE不仅能让我们开发事半功倍，也能让我们把更多精力专注在业务逻辑本身，不必过多关注底层细节。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/android_heroes/2、Android开发工具接触/"/>
+
+
+
+
+
+  <title>2、Android开发工具接触及ADB命令 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/android_heroes/2、Android开发工具接触/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2、Android开发工具接触及ADB命令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-01-02T09:40:43+08:00">
+                2016-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android群英传/" itemprop="url" rel="index">
+                    <span itemprop="name">Android群英传</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/android_heroes/2、Android开发工具接触/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="android_heroes/2、Android开发工具接触/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一章，我们要了解一下Android的IDE（集成开发环境）。一款好的IDE不仅能让我们开发事半功倍，也能让我们把更多精力专注在业务逻辑本身，不必过多关注底层细节。<a id="more"></a></p>
+<p>进行Android开发，目前主要是使用Eclipse和AndroidStudio。Eclipse需要整合adt插件才能进行Android开发，而AndroidStudio是Google推荐的专门用于Android开发的IDE。因为AndroidStudio是谷歌一手打造，并不留余力的完善它，而Eclipse已经停止更新；所以，我们这边主要说的是AndroidStudio。</p>
+<h1 id="Android-Studio的下载与安装"><a href="#Android-Studio的下载与安装" class="headerlink" title="Android Studio的下载与安装"></a>Android Studio的下载与安装</h1><p>如果你能顺利穿墙的话，可以直接到<a href="http://developer.android.com/sdk/index.html" target="_blank" rel="external">Android Studio官网</a>进行下载，如果不行的话可以到<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools</a>进行下载，包括SDK的更新也可以根据这个网站的方法进行配置。我是在<a href="http://www.androiddevtools.cn/" target="_blank" rel="external">AndroidDevTools</a>上下载的2.0Preview4版本和SDK安装包。</p>
+<p>在Android安装之前，我们得先安装JDK并进行环境配置。配置完JDK后，并安装好AndroidStudio就可以开启了，一般第一次开启会进行一些更新，可能会比较久一些。网上有许多关于AndroidStudio的使用及配置方法，这边就不过多介绍了。接下来，我们主要想介绍的是ADB命令，如何通过命令连接手机和电脑。</p>
+<h1 id="ADB命令使用技巧"><a href="#ADB命令使用技巧" class="headerlink" title="ADB命令使用技巧"></a>ADB命令使用技巧</h1><h2 id="ADB配置"><a href="#ADB配置" class="headerlink" title="ADB配置"></a>ADB配置</h2><p>ADB——AndroidDebugBridge。是用于连接手机和电脑的工具，可以让我们用电脑操作手机。当我们安装完AndroidStudio后，会有个SDK目录，而ADB工具是位于SDK的platform—tools的目录下的。我们需要把这个目录添加到系统环境变量中才能直接使用。目前，AndroidStudio内置了终端，我们可以很方便的使用。</p>
+<p>配置完环境变量后可以在命令行中输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb version</div></pre></td></tr></table></figure>
+<p>如果提示的是如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Android Debug Bridge version 1.0.32</div></pre></td></tr></table></figure>
+<p>就说明配置成功了，我们只要在手机上确认下对该电脑授权后就可以直接在命令行里对手机进行操控了。</p>
+<h2 id="ADB命令的使用"><a href="#ADB命令的使用" class="headerlink" title="ADB命令的使用"></a>ADB命令的使用</h2><ul>
+<li>开启和关闭ADB服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb start-server</div><div class="line">adb kill-server</div></pre></td></tr></table></figure>
+<h3 id="shell命令"><a href="#shell命令" class="headerlink" title="shell命令"></a>shell命令</h3><p>Android是基于Linux开发，所以，它也支持一些常用的shell命令。我们在命令行中输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell</div></pre></td></tr></table></figure>
+<p>然后，选择正在连接电脑的手机，就可以对其使用shell命令了。</p>
+<h3 id="ADB常用命令"><a href="#ADB常用命令" class="headerlink" title="ADB常用命令"></a>ADB常用命令</h3><p>接下来，我们来看一些ADB常用命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//用于查看当前连接到电脑的所有Android设备</div><div class="line">android list targets </div><div class="line"></div><div class="line">//用于安装apk安装包，即安装application到手机里。</div><div class="line">adb install -r application.apk </div><div class="line"></div><div class="line">//用于安装apk到手机里，如adb push D:\Test.apk /system/app。是把Test.apk这个文件安装到手机的system/app目录下。</div><div class="line">如果是作为普通用户的话，push主要是用于把手机上的文件拷贝到手机里。</div><div class="line">adb push &lt;local&gt; &lt;remote&gt; </div><div class="line"></div><div class="line">//有把文件从电脑拷贝到手机里，就有从手机里拷贝到电脑上的命令，如下</div><div class="line">adb pull &lt;remote&gt; &lt;local&gt;</div></pre></td></tr></table></figure>
+<p>作为开发者的我们，要使用的命令除了上面几个以外，还包括了一些用于调试或查看信息的命令，如</p>
+<ul>
+<li>查看log</li>
+</ul>
+<p>进入shell命令后，可以输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb shell</div><div class="line">logcat|grep &quot;abc&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>删除应用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">adb remount(重新加载分区，使系统分区重新可写)</div><div class="line">adb shell</div><div class="line">cd system/app</div><div class="line">rm *.apk</div></pre></td></tr></table></figure>
+<ul>
+<li>查看系统盘符</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell df</div></pre></td></tr></table></figure>
+<ul>
+<li>输出所有已经安装的应用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell pm list packages -f</div></pre></td></tr></table></figure>
+<ul>
+<li>模拟按键输入</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell input keyevent code</div></pre></td></tr></table></figure>
+<p>最后的code是指要执行的命令，可以再网上查询对于的code，常用的一些模拟命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">input keyevent 82 menu</div><div class="line">input keyevent 3 home</div><div class="line">input keyevent 19 up</div><div class="line">input keyevent 66 enter</div><div class="line">input keyevent 5 back</div></pre></td></tr></table></figure>
+<ul>
+<li>模拟滑动输入</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell input touchscreen &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li>查看运行状态 </li>
+</ul>
+<p>可以列出很多运行状态，具体可查看API文档。如Activity状态，同时过滤”tencent”关键字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">adb shell dumpsys</div><div class="line">dumpsys activity activities | grep &quot;tencent&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>Package管理信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pm list packages -f</div></pre></td></tr></table></figure>
+<ul>
+<li>AM管理信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am start -n 包名+类名</div></pre></td></tr></table></figure>
+<ul>
+<li>录制屏幕</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell screenrecord/sdcard/demo.mp4</div></pre></td></tr></table></figure>
+<ul>
+<li>重新启动</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb reboot</div></pre></td></tr></table></figure>
+<h3 id="ADB-命令来源"><a href="#ADB-命令来源" class="headerlink" title="ADB 命令来源"></a>ADB 命令来源</h3><p>adb命令主要存在于/system/core/toolbox和/frameworks/ase/cmds两个目录下。</p>
+<p>总结：这一章，主要想把adb命令给记录下来方便以后使用查看。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/Android-Studio/" rel="tag"># Android Studio</a>
+          
+            <a href="/tags/ADB命令/" rel="tag"># ADB命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/android/Android开发MVP模式入门/" rel="next" title="Android开发MVP模式入门">
+                <i class="fa fa-chevron-left"></i> Android开发MVP模式入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Designpattern/Simple_Factory_Pattern/" rel="prev" title="设计模式之简单工厂模式">
+                设计模式之简单工厂模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="android_heroes/2、Android开发工具接触/"
+           data-title="2、Android开发工具接触及ADB命令" data-url="http://huangzihao.me/android_heroes/2、Android开发工具接触/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Studio的下载与安装"><span class="nav-number">1.</span> <span class="nav-text">Android Studio的下载与安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ADB命令使用技巧"><span class="nav-number">2.</span> <span class="nav-text">ADB命令使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ADB配置"><span class="nav-number">2.1.</span> <span class="nav-text">ADB配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ADB命令的使用"><span class="nav-number">2.2.</span> <span class="nav-text">ADB命令的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shell命令"><span class="nav-number">2.2.1.</span> <span class="nav-text">shell命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADB常用命令"><span class="nav-number">2.2.2.</span> <span class="nav-text">ADB常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADB-命令来源"><span class="nav-number">2.2.3.</span> <span class="nav-text">ADB 命令来源</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

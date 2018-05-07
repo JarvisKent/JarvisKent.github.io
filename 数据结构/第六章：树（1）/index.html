@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="树," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="兴趣遍地都是，专注和持之以恒才是真正稀缺的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第六章：树（1）">
+<meta property="og:url" content="http://huangzihao.me/数据结构/第六章：树（1）/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="兴趣遍地都是，专注和持之以恒才是真正稀缺的。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/treeBG.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_1.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_2.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_3.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_4.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_5.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_6.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_7.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_8.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_9.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_10.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_11.jpg">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/tree_12.jpg">
+<meta property="og:updated_time" content="2016-09-10T01:26:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第六章：树（1）">
+<meta name="twitter:description" content="兴趣遍地都是，专注和持之以恒才是真正稀缺的。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/treeBG.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/数据结构/第六章：树（1）/"/>
+
+
+
+
+
+  <title>第六章：树（1） | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/数据结构/第六章：树（1）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第六章：树（1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-10T08:59:16+08:00">
+                2016-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/数据结构/第六章：树（1）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="数据结构/第六章：树（1）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/treeBG.jpg" alt="tree"><br>兴趣遍地都是，专注和持之以恒才是真正稀缺的。<a id="more"></a></p>
+<h1 id="一、树的定义"><a href="#一、树的定义" class="headerlink" title="一、树的定义"></a>一、树的定义</h1><blockquote>
+<p>树是n(n&gt;=0)个结点的有限子集。n=0时称为空树。在任意一颗非空树中，（1）有且仅有一个特定的称为根的结点。（2）n&gt;1时，其余结点可分为m（m&gt;0）个互不相交的有限集T1，T2,……Tm，其中每一个集合本身又是一棵树，并且称为根的子树。</p>
+</blockquote>
+<p>需要强调的是：</p>
+<ul>
+<li>n&gt;0时根结点是唯一的，不可能存在多个根结点。</li>
+<li>m&gt;0时，子树的个数没有限制，但它们一定是不相交的。</li>
+</ul>
+<h2 id="1、结点分类"><a href="#1、结点分类" class="headerlink" title="1、结点分类"></a>1、结点分类</h2><p>树的结点包含一个数据元素及若干指向其子树的分支。结点拥有的子树数称为结点的度（degree）。度为0的结点称为叶结点（Leaf）或终端节点；度不为0的结点称为非终端结点或分支结点。除根结点外，分支结点也称为内部结点。树的度是树内各结点的度的最大值。如某个树中结点的度的最大值是D结点，度为3，所以树的度也为3。</p>
+<h2 id="2、结点间关系"><a href="#2、结点间关系" class="headerlink" title="2、结点间关系"></a>2、结点间关系</h2><ul>
+<li>结点的子树的根称为该结点的孩子（child）。</li>
+<li>相应的，该结点称为孩子的双亲（parent）。</li>
+<li>同一个双亲的孩子之间称为兄弟（sibling）。</li>
+<li>结点的祖先是从根到该结点所经分支上的所有结点。</li>
+<li>以某结点为根的子树中的任一结点都称为该结点的子孙。</li>
+</ul>
+<h2 id="3、树的其他相关概念"><a href="#3、树的其他相关概念" class="headerlink" title="3、树的其他相关概念"></a>3、树的其他相关概念</h2><ul>
+<li>结点的层次（Level）从根开始定义，根为第一层，根的孩子为第二层。</li>
+<li>双亲在同一层的结点互为堂兄弟。</li>
+<li>树中结点的最大层次称为树的深度（Depth）或者高度。</li>
+<li>如果树中结点的各子树看成从左至右是有次序的，不能互相交换的，则称该树为有序树，否则称为无序树。</li>
+<li>森林（Forest）树m（m&gt;=0）棵互不相交的树的合集。</li>
+</ul>
+<h2 id="4、线性表与树的对比"><a href="#4、线性表与树的对比" class="headerlink" title="4、线性表与树的对比"></a>4、线性表与树的对比</h2><p>线性结构</p>
+<ul>
+<li>第一个数据元素：无前驱</li>
+<li>最后一个数据元素:无后继</li>
+<li>中间元素：一个前驱一个后继</li>
+</ul>
+<p>树结构</p>
+<ul>
+<li>根结点：无双亲，唯一<br>-叶结点：无孩子，可以多个</li>
+<li>中间结点：一个双亲多个孩子</li>
+</ul>
+<h1 id="二、树的抽象数据类型"><a href="#二、树的抽象数据类型" class="headerlink" title="二、树的抽象数据类型"></a>二、树的抽象数据类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ADT 树（TREE）</div><div class="line">Data</div><div class="line">    树是由一个根结点和若干棵子树构成。树中结点具有相同数据类型及层次关系。</div><div class="line"></div><div class="line">Operation</div><div class="line">    InitTree(*T)    //构造空树T</div><div class="line">    DestroyTree(* T):销毁树T</div><div class="line">    CreateTree(*T,definition):按definition中给出树的定义来构造树。</div><div class="line">    ClearTree（*T）：若T存在，将T清为空树</div><div class="line">    TreeEmpty（T）：若T为空树，返回True，否则返回false。</div><div class="line">    TreeDepth（T）：返回T的深度。</div><div class="line">    Root（T）：返回T的跟结点</div><div class="line">    Value（T，cur_e）:cur_e是树T中一个结点，返回此结点的值</div><div class="line">    Assign(T,cur_e,value):给树T的结点cur_e赋值为value。</div><div class="line">    Parent(T,cur_e):若cur_e是树T的非根结点，则返回它的双亲，否则返回空</div><div class="line">    LeftChild(T,cur_e)：若cur_e是树的非叶结点，则返回它的最左孩子，否则返回空</div><div class="line">    RightSibling(T,cur_e):若cur_e有右兄弟，则返回它的右兄弟，否则返回空</div><div class="line">    InsertChild（*T，*p，i，c）：其中p指向树T的某个结点，i为所指结点p的度加上1，非空树c与T不相交，操作结果为插入c为树T中p指结点的第i棵子树。</div><div class="line">    DeleteChild（*T，*p，i）:其中p指向树T的某个结点，i为所指结点p的度，操作结果为删除T中p所指结点的第i棵子树。</div><div class="line">endADT</div></pre></td></tr></table></figure>
+<h1 id="三、树的存储结构"><a href="#三、树的存储结构" class="headerlink" title="三、树的存储结构"></a>三、树的存储结构</h1><p>双亲表示法、孩子表示法、孩子兄弟表示法。</p>
+<h2 id="1、双亲表示法"><a href="#1、双亲表示法" class="headerlink" title="1、双亲表示法"></a>1、双亲表示法</h2><ul>
+<li>定义</li>
+</ul>
+<p>以一组连续空间存储树的结点，同时每个结点中，附设一个指示器指示其双亲结点到链表中的位置。如下图<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_1.jpg" alt="tree1"></p>
+<p> data是数据域：存储结点的数据信息。parent是指针域：存储该结点的双亲在数组中的下标。</p>
+<ul>
+<li>双亲表示法的结点结构定义代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/*树的双亲表示法结点结构定义 */</div><div class="line">#define MAX_TREE_SIZE 100</div><div class="line">typedef int TElemType;    //树结点的数据类型，这边定为整型</div><div class="line">typedef struct PTNode&#123;    //结点结构</div><div class="line">    TElemType data;</div><div class="line">    int parent;</div><div class="line">&#125;PTNode;</div><div class="line">typedef struct&#123;        //树结构</div><div class="line">    PTNode node[MAX_TREE_SIZE]；//结点数组</div><div class="line">    int r,n;    //根的位置和节点树</div><div class="line">&#125;PTree</div></pre></td></tr></table></figure>
+<p>因为跟结点是没有双亲的，所以，我们约定根结点的位置域为-1。那么树<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_2.jpg" alt="tree1"></p>
+<p>的双亲表示法则如下表所示<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_3.jpg" alt="tree1"></p>
+<p>这样子的存储结构，可以根据结点的parent很容易找到它的双亲结点，所以时间复杂度为O(1)，当parent为-1时，则表示找到了树的根结点。可如果要知道结点的孩子的话，却是仍要遍历整个结构才行。</p>
+<ul>
+<li>改进1：关于孩子结点</li>
+</ul>
+<p>因为想知道某个结点孩子的话还是需要遍历整个结构，所以，在这边可以改进一下，增加一个最左孩子的域，<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_4.jpg" alt="tree1"></p>
+<p> 这样对于有0-1个孩子结点的，就能轻易找到了，对于有两个孩子的，知道了长子是谁，另一个就是次子了。</p>
+<ul>
+<li>改进2：关于兄弟结点</li>
+</ul>
+<p>可以增加一个右兄弟域来体现兄弟关系，每一个节点如果它存在右兄弟，则记录下右兄弟的下标。如果不存在则赋值为-1，如<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_5.jpg" alt="tree1"></p>
+<p>如果节点孩子多，又需要关注双亲，关注结点孩子，关注结点东西，且对时间遍历要求还比较高，还可以把此结构拓展为双亲域，长子域，右兄弟域。<strong>存储结构的设计是一个非常灵活的过程。一个存储结构设计得是否合理，取决于基于该存储结构的运算是否合适、是否方便，时间复杂度好不好等。</strong></p>
+<h1 id="2、孩子表示法"><a href="#2、孩子表示法" class="headerlink" title="2、孩子表示法"></a>2、孩子表示法</h1><p>每个结点有多个指针域，其中每个指针指向一棵子树的根结点，我们把这种方法叫做多重链表表示法。树每个结点的度（孩子的个数）是不同的，有两种方案解决。</p>
+<ol>
+<li><p>指针域的个数就等于树的度。树的度是树各个结点度的最大值。<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_6.jpg" alt="tree1"></p>
+<p>如果树的各结点的度差异过大，则会造成空间浪费，即很多的指针域是空的。</p>
+</li>
+<li><p>每个结点的指针域的个数等于该结点的度，取一个位置来存储结点指针域的个数。<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_7.jpg" alt="tree1"></p>
+<p>这样就克服了第一种方案浪费空间的缺点，但由于各结点的链表是不相同的结构，且要维护结点的度的数值，运算上就多了时间的损耗。</p>
+</li>
+</ol>
+<p>为了遍历整棵树，把每个结点放到一个顺序存储结构数组中是合理的，但结点的度是不确定的，因此，我们再对每个节点的孩子建立一个单链表体现它们的关系。这就是孩子表示法。</p>
+<blockquote>
+<p>概念：把每个结点的孩子结点排列起来，以单链表作为存储结构，则n个结点有n个孩子链表，如果是叶子结点则此单链表为空。然后n个头指针又组成一个线性表，采用顺序存储结构，存放进一个一维数组中。</p>
+</blockquote>
+<p>如图：<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_8.jpg" alt="tree1"></p>
+<p> 为此需要两种结点结构，一个是孩子链表的孩子结点：<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_9.jpg" alt="tree1"></p>
+<p>child是数据域，next是指针域。<br> 一个是表头结点：<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_10.jpg" alt="tree1"><br> data是数据域，firstchild是头指针域，存储该结点的孩子链表的头指针。</p>
+<p>孩子结点表示法的结构定义代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/*树的孩子表示法结构定义 */</div><div class="line">#define MAX_TREE_SIZE 100</div><div class="line">typedef struct CTNode&#123;    //孩子结点</div><div class="line">    int child;</div><div class="line">    struct CTNode *next;</div><div class="line">&#125; *ChildPtr;</div><div class="line">typedef struct&#123;    //表头结构</div><div class="line">    TElemType data;</div><div class="line">    ChildPtr firstchild;</div><div class="line">&#125;CTBox;</div><div class="line">typedef struct &#123;    //树结构</div><div class="line">    CTBox nodes[MAX_TREE_SIZE];    //结点数组</div><div class="line">    int r,n;    //根的位置和节点树</div><div class="line">&#125;CTree;</div></pre></td></tr></table></figure>
+<p>这样的结构查找某个结点孩子，或者某个结点兄弟，只需要查找这个结点的孩子单链表即可，对于整棵树遍历只需对头结点的数组循环即可。<br>如果想知道某个结点的双亲就比较麻烦了，需要整棵树遍历才行。也可以把双亲表示法和孩子表示法综合一下，这种方法称为双亲孩子表示法，算是孩子表示法的改进。</p>
+<h2 id="3、孩子兄弟表示法"><a href="#3、孩子兄弟表示法" class="headerlink" title="3、孩子兄弟表示法"></a>3、孩子兄弟表示法</h2><blockquote>
+<p>任意一棵树，它的结点的第一个孩子如果存在就是唯一的，它的右兄弟如果存在也是唯一的。因此，设置两个指针，分别指向该结点的第一个孩子和此结点的右兄弟。</p>
+</blockquote>
+<ul>
+<li><p>结点结构如下：<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_11.jpg" alt="tree1"><br>其中data是数据域，firstchild是指针域，存储该结点的第一个孩子结点的存储地址，rightsib是指针域，存储该结点的右兄弟结点的存储地址。</p>
+</li>
+<li><p>结点定义代码</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">typedef struct CSNode&#123;</div><div class="line">    TElemType data;</div><div class="line">    struct CSNode *firstchild, *rightsib;</div><div class="line">&#125;CSNode,*CSTree;</div></pre></td></tr></table></figure>
+<ul>
+<li>示意图:<br><img src="http://obl32g9cf.bkt.clouddn.com/tree_12.jpg" alt="tree1"></li>
+</ul>
+<p>需要的情况下，也完全可以再增加一个parent指针域来解决快去查找双亲的问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/树/" rel="tag"># 树</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/数据结构/数据结构第五章/" rel="next" title="第五章：串">
+                <i class="fa fa-chevron-left"></i> 第五章：串
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/使用iframe标签时父窗体与子窗体之间的js调用/" rel="prev" title="使用iframe标签时父窗体与子窗体之间的js调用">
+                使用iframe标签时父窗体与子窗体之间的js调用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="数据结构/第六章：树（1）/"
+           data-title="第六章：树（1）" data-url="http://huangzihao.me/数据结构/第六章：树（1）/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、树的定义"><span class="nav-number">1.</span> <span class="nav-text">一、树的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、结点分类"><span class="nav-number">1.1.</span> <span class="nav-text">1、结点分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、结点间关系"><span class="nav-number">1.2.</span> <span class="nav-text">2、结点间关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、树的其他相关概念"><span class="nav-number">1.3.</span> <span class="nav-text">3、树的其他相关概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、线性表与树的对比"><span class="nav-number">1.4.</span> <span class="nav-text">4、线性表与树的对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、树的抽象数据类型"><span class="nav-number">2.</span> <span class="nav-text">二、树的抽象数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、树的存储结构"><span class="nav-number">3.</span> <span class="nav-text">三、树的存储结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、双亲表示法"><span class="nav-number">3.1.</span> <span class="nav-text">1、双亲表示法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、孩子表示法"><span class="nav-number">4.</span> <span class="nav-text">2、孩子表示法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3、孩子兄弟表示法"><span class="nav-number">4.1.</span> <span class="nav-text">3、孩子兄弟表示法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

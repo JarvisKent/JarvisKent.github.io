@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Struts2、Spring、Hibernate," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从工作到现在一年多，从没搭建过S2SH（Struts2+Spring+Hibernate）框架，虽然也感觉应该是没什么难度，但是没有真正动手搭建过也不好意思说自己就真的会。于是，上天就给了我这么个机会，降大任于我，要我从搭建框架开始，苦我心智，劳我筋骨……然后，就有了这篇记录我如何快速搭建一个S2SH的教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建S2SH框架">
+<meta property="og:url" content="http://huangzihao.me/java/搭建S2SH框架/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="从工作到现在一年多，从没搭建过S2SH（Struts2+Spring+Hibernate）框架，虽然也感觉应该是没什么难度，但是没有真正动手搭建过也不好意思说自己就真的会。于是，上天就给了我这么个机会，降大任于我，要我从搭建框架开始，苦我心智，劳我筋骨……然后，就有了这篇记录我如何快速搭建一个S2SH的教程">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/10.23.jpg">
+<meta property="og:updated_time" content="2016-10-23T02:22:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建S2SH框架">
+<meta name="twitter:description" content="从工作到现在一年多，从没搭建过S2SH（Struts2+Spring+Hibernate）框架，虽然也感觉应该是没什么难度，但是没有真正动手搭建过也不好意思说自己就真的会。于是，上天就给了我这么个机会，降大任于我，要我从搭建框架开始，苦我心智，劳我筋骨……然后，就有了这篇记录我如何快速搭建一个S2SH的教程">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/10.23.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/java/搭建S2SH框架/"/>
+
+
+
+
+
+  <title>搭建S2SH框架 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/java/搭建S2SH框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建S2SH框架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-15T13:15:55+08:00">
+                2016-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/java/搭建S2SH框架/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="java/搭建S2SH框架/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/10.23.jpg" alt="10.23"><br>从工作到现在一年多，从没搭建过S2SH（Struts2+Spring+Hibernate）框架，虽然也感觉应该是没什么难度，但是没有真正动手搭建过也不好意思说自己就真的会。于是，上天就给了我这么个机会，降大任于我，要我从搭建框架开始，苦我心智，劳我筋骨……然后，就有了这篇记录我如何快速搭建一个S2SH的教程<a id="more"></a></p>
+<h1 id="一、准备阶段"><a href="#一、准备阶段" class="headerlink" title="一、准备阶段"></a>一、准备阶段</h1><p>其实也没什么好准备的，确定IDE可以正常创建一个Dynamic Web项目，下载S2SH相关的jar包导入就可以开始配置了。这一步基本不会遇到什么麻烦。</p>
+<h1 id="二、配置Struts2"><a href="#二、配置Struts2" class="headerlink" title="二、配置Struts2"></a>二、配置Struts2</h1><p>在项目中的web.xml中添加Struts2的配置，内容如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;!-- struts2配置 --&gt;</div><div class="line">&lt;filter&gt;</div><div class="line"> &lt;filter-name&gt;struts2&lt;/filter-name&gt;</div><div class="line"> &lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;</div><div class="line">&lt;/filter&gt;</div><div class="line">&lt;filter-mapping&gt;</div><div class="line">  &lt;filter-name&gt;struts2&lt;/filter-name&gt;</div><div class="line">  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</div><div class="line">&lt;/filter-mapping&gt;</div></pre></td></tr></table></figure></p>
+<p>配置完后就可以创建struts配置文件了，可以添加下Action方法，页面上调用该action方法进行测试。这里就不多叙述了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt; </div><div class="line">&lt;!DOCTYPE struts PUBLIC </div><div class="line">    &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot; </div><div class="line">    &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt; </div><div class="line">&lt;struts&gt; </div><div class="line">    &lt;package name=&quot;test&quot; namespace=&quot;/&quot; extends=&quot;struts-default&quot;&gt;</div><div class="line">        &lt;action name=&quot;openTestPage&quot; class=&quot;com.vipmangement.function.test.action.functionTestAction&quot;</div><div class="line">            method=&quot;testPage&quot;&gt;</div><div class="line">            &lt;result name=&quot;success&quot;&gt;/WEB-INF/page/test.jsp&lt;/result&gt;</div><div class="line">        &lt;/action&gt;</div><div class="line">    &lt;/package&gt;</div><div class="line">&lt;/struts&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="三、配置Spring"><a href="#三、配置Spring" class="headerlink" title="三、配置Spring"></a>三、配置Spring</h1><p>Spring的配置和Struts2差不多，也是在web.xml中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">    &lt;!-- spring  监听器--&gt;</div><div class="line">&lt;context-param&gt;</div><div class="line">   &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">   &lt;param-value&gt;/WEB-INF/classes/applicationContext.xml,classpath*:com/*/*Context.xml,classpath*:com/*/*/*Context.xml&lt;/param-value&gt;</div><div class="line">&lt;/context-param&gt;</div><div class="line">&lt;listener&gt;</div><div class="line">   &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;</div><div class="line">&lt;/listener&gt;</div></pre></td></tr></table></figure></p>
+<p>需要注意的是，如果像上面这么配置的话，那么spring的配置文件需要写在src目录下，名字为applicationContext.xml。这样子生成部署包后，该文件才会存在于<strong>/WEB-INF/classes/applicationContext.xml</strong>。</p>
+<p>Spring配置完监听后，就可以直接在配置文件中配置使用了,配置格式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</div><div class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</div><div class="line">&quot;&gt;</div><div class="line"></div><div class="line">&lt;bean id=&quot;functionTestAction&quot; class=&quot;ccom.vipmangement.function.test.action.functionTestAction&quot; scope=&quot;prototype&quot;&gt;</div><div class="line">            &lt;property name=&quot;test&quot; ref=&quot;test&quot;&gt;&lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="四、配置Hinbernate"><a href="#四、配置Hinbernate" class="headerlink" title="四、配置Hinbernate"></a>四、配置Hinbernate</h1><p>hibernate有两种配置方式，一种是单独写配置文件，一种是直接配置到Spring中。</p>
+<h2 id="1、添加配置文件"><a href="#1、添加配置文件" class="headerlink" title="1、添加配置文件"></a>1、添加配置文件</h2><ul>
+<li><p>在src目录下创建一个hibernate.xml,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE hibernate-configuration PUBLIC</div><div class="line"> &quot;-//Hibernate/Hibernate Configuration DTD 3.0//EN&quot;</div><div class="line"> &quot;http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd&quot;&gt;</div><div class="line">&lt;hibernate-configuration&gt;</div><div class="line">    &lt;session-factory&gt;</div><div class="line">    &lt;!-- 这边我连接的是mysql数据库--&gt;</div><div class="line">        &lt;property name=&quot;dialect&quot;&gt;</div><div class="line">            org.hibernate.dialect.MySQLDialect</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property name=&quot;connection.url&quot;&gt;</div><div class="line">&lt;!--localhost/数据库名 --&gt;</div><div class="line">            jdbc:mysql://localhost/salevipmanagementsystem</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property name=&quot;connection.username&quot;&gt;jarvis&lt;/property&gt;</div><div class="line">        &lt;property name=&quot;connection.password&quot;&gt;jarvis&lt;/property&gt;</div><div class="line">        &lt;property name=&quot;connection.driver_class&quot;&gt;</div><div class="line">            com.mysql.jdbc.Driver</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property name=&quot;myeclipse.connection.profile&quot;&gt;mysql&lt;/property&gt;</div><div class="line">  &lt;mapping resource=&quot;com/vipmangement/function/test/bean/UserBean.hbm.xml&quot;/&gt; </div><div class="line">    &lt;/session-factory&gt;</div><div class="line">&lt;/hibernate-configuration&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个用于读取数据的sessionFactory</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div></pre></td><td class="code"><pre><div class="line">package com.vipmangement.function.test.action;</div><div class="line"></div><div class="line">import org.hibernate.HibernateException;</div><div class="line">import org.hibernate.Session;</div><div class="line">import org.hibernate.cfg.Configuration;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Configures and provides access to Hibernate sessions, tied to the</div><div class="line"> * current thread of execution.  Follows the Thread Local Session</div><div class="line"> * pattern, see &#123;@link http://hibernate.org/42.html &#125;.</div><div class="line"> */</div><div class="line">public class HibernateSessionFactory &#123;</div><div class="line"></div><div class="line">    /** </div><div class="line">     * Location of hibernate.cfg.xml file.</div><div class="line">     * Location should be on the classpath as Hibernate uses  </div><div class="line">     * #resourceAsStream style lookup for its configuration file. </div><div class="line">     * The default classpath location of the hibernate config file is </div><div class="line">     * in the default package. Use #setConfigFile() to update </div><div class="line">     * the location of the configuration file for the current session.   </div><div class="line">     */</div><div class="line">    private static String CONFIG_FILE_LOCATION = &quot;/hibernate.xml&quot;;</div><div class="line">	private static final ThreadLocal&lt;Session&gt; threadLocal = new ThreadLocal&lt;Session&gt;();</div><div class="line">    private  static Configuration configuration = new Configuration();    </div><div class="line">    private static org.hibernate.SessionFactory sessionFactory;</div><div class="line">    private static String configFile = CONFIG_FILE_LOCATION;</div><div class="line"></div><div class="line">	static &#123;</div><div class="line">    	try &#123;</div><div class="line">			configuration.configure(configFile);</div><div class="line">			sessionFactory = configuration.buildSessionFactory();</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			System.err</div><div class="line">					.println(&quot;%%%% Error Creating SessionFactory %%%%&quot;);</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">    &#125;</div><div class="line">    private HibernateSessionFactory() &#123;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">     * Returns the ThreadLocal Session instance.  Lazy initialize</div><div class="line">     * the &lt;code&gt;SessionFactory&lt;/code&gt; if needed.</div><div class="line">     *</div><div class="line">     *  @return Session</div><div class="line">     *  @throws HibernateException</div><div class="line">     */</div><div class="line">    public static Session getSession() throws HibernateException &#123;</div><div class="line">        Session session = (Session) threadLocal.get();</div><div class="line"></div><div class="line">		if (session == null || !session.isOpen()) &#123;</div><div class="line">			if (sessionFactory == null) &#123;</div><div class="line">				rebuildSessionFactory();</div><div class="line">			&#125;</div><div class="line">			session = (sessionFactory != null) ? sessionFactory.openSession()</div><div class="line">					: null;</div><div class="line">			threadLocal.set(session);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">        return session;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">     *  Rebuild hibernate session factory</div><div class="line">     *</div><div class="line">     */</div><div class="line">	public static void rebuildSessionFactory() &#123;</div><div class="line">		try &#123;</div><div class="line">			configuration.configure(configFile);</div><div class="line">			sessionFactory = configuration.buildSessionFactory();</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			System.err</div><div class="line">					.println(&quot;%%%% Error Creating SessionFactory %%%%&quot;);</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">     *  Close the single hibernate session instance.</div><div class="line">     *</div><div class="line">     *  @throws HibernateException</div><div class="line">     */</div><div class="line">    public static void closeSession() throws HibernateException &#123;</div><div class="line">        Session session = (Session) threadLocal.get();</div><div class="line">        threadLocal.set(null);</div><div class="line"></div><div class="line">        if (session != null) &#123;</div><div class="line">            session.close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">     *  return session factory</div><div class="line">     *</div><div class="line">     */</div><div class="line">	public static org.hibernate.SessionFactory getSessionFactory() &#123;</div><div class="line">		return sessionFactory;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">     *  return session factory</div><div class="line">     *</div><div class="line">     *	session factory will be rebuilded in the next call</div><div class="line">     */</div><div class="line">	public static void setConfigFile(String configFile) &#123;</div><div class="line">		HibernateSessionFactory.configFile = configFile;</div><div class="line">		sessionFactory = null;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">     *  return hibernate configuration</div><div class="line">     *</div><div class="line">     */</div><div class="line">	public static Configuration getConfiguration() &#123;</div><div class="line">		return configuration;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建表的映射</p>
+</li>
+</ul>
+<p>假定我创建了一张名为TABLE的表，表中有id,userid,pwd三个字段.</p>
+<ol>
+<li>首先，我需要创建一个bean</li>
+</ol>
+<p>UserBean.java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">public class UserBean &#123;</div><div class="line"></div><div class="line">	private int id;</div><div class="line">	private String userName;</div><div class="line">	private String password;</div><div class="line">	public int getId() &#123;</div><div class="line">		return id;</div><div class="line">	&#125;</div><div class="line">	public void setId(int id) &#123;</div><div class="line">		this.id = id;</div><div class="line">	&#125;</div><div class="line">	public String getUserName() &#123;</div><div class="line">		return userName;</div><div class="line">	&#125;</div><div class="line">	public void setUserName(String userName) &#123;</div><div class="line">		this.userName = userName;</div><div class="line">	&#125;</div><div class="line">	public String getPassword() &#123;</div><div class="line">		return password;</div><div class="line">	&#125;</div><div class="line">	public void setPassword(String password) &#123;</div><div class="line">		this.password = password;</div><div class="line">	&#125;</div><div class="line">	@Override</div><div class="line">	public String toString() &#123;</div><div class="line">		return &quot;UserBean [id=&quot; + id + &quot;, password=&quot; + password + &quot;, userName=&quot;</div><div class="line">				+ userName + &quot;]&quot;;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>接着，在bean目录下创建配置文件UserBean.hbm.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</div><div class="line">&quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd&quot;&gt;</div><div class="line"></div><div class="line">&lt;hibernate-mapping&gt;</div><div class="line"></div><div class="line">    &lt;class name=&quot;com.test.bean.UserBean&quot; table=&quot;TABLE&quot; schema=&quot;databaseName&quot;&gt;</div><div class="line">        &lt;id name=&quot;id&quot; type=&quot;java.lang.Integer&quot;&gt;</div><div class="line">            &lt;column name=&quot;id&quot; /&gt;</div><div class="line">        &lt;/id&gt;</div><div class="line">        &lt;property name=&quot;userName&quot; type=&quot;java.lang.String&quot;&gt;</div><div class="line">            &lt;column name=&quot;userid&quot; length=&quot;20&quot; /&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property name=&quot;password&quot; type=&quot;java.lang.String&quot;&gt;</div><div class="line">            &lt;column name=&quot;pwd&quot; length=&quot;50&quot; /&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">    &lt;/class&gt;</div><div class="line">&lt;/hibernate-mapping&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用hibernate提供的方法调用数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">    Session session=HibernateSessionFactory.getSession();</div><div class="line"></div><div class="line">    Query query=session.createQuery(&quot;from UserBean where id=1&quot;);</div><div class="line">    List list=query.list();</div><div class="line">    UserBean kc1=(UserBean)list.get(0);</div><div class="line">    System.out.println(kc1.getUserName());</div><div class="line">    HibernateSessionFactory.closeSession();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="2、在Spring中配置Hinbernate，"><a href="#2、在Spring中配置Hinbernate，" class="headerlink" title="2、在Spring中配置Hinbernate，"></a>2、在Spring中配置Hinbernate，</h2><p>在applicationContext.xml中添加如下配置，配置的还是mysql<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 数据源 --&gt;</div><div class="line">	&lt;bean id=&quot;dataSource&quot;</div><div class="line">		class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</div><div class="line">		&lt;property name=&quot;driverClassName&quot;</div><div class="line">			value=&quot;com.mysql.jdbc.Driver&quot;&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;property name=&quot;url&quot;</div><div class="line">			value=&quot;jdbc:mysql://localhost/dataBaseName&quot;&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line"></div><div class="line">		&lt;property name=&quot;username&quot; value=&quot;admin&quot;&gt;&lt;/property&gt;</div><div class="line">		&lt;property name=&quot;password&quot; value=&quot;admin&quot;&gt;&lt;/property&gt;</div><div class="line"></div><div class="line">	&lt;/bean&gt;</div><div class="line">	&lt;!-- dataSource注入到sessionFactory --&gt;</div><div class="line">	&lt;bean id=&quot;sessionFactory&quot;</div><div class="line">		class=&quot;org.springframework.orm.hibernate3.LocalSessionFactoryBean&quot;&gt;</div><div class="line">		&lt;property name=&quot;dataSource&quot;&gt;</div><div class="line">			&lt;ref bean=&quot;dataSource&quot; /&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;property name=&quot;hibernateProperties&quot;&gt;</div><div class="line">			&lt;props&gt;</div><div class="line">				&lt;prop key=&quot;hibernate.dialect&quot;&gt;</div><div class="line">					org.hibernate.dialect.MySQLDialect</div><div class="line">				&lt;/prop&gt;</div><div class="line">				&lt;prop key=&quot;hibernate.show_sql&quot;&gt;true&lt;/prop&gt;</div><div class="line">			&lt;/props&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;property name=&quot;mappingResources&quot;&gt;</div><div class="line">			&lt;list&gt;</div><div class="line">				&lt;value&gt;com/test/bean/UserBean.hbm.xml&lt;/value&gt;</div><div class="line">				</div><div class="line">			&lt;/list&gt;</div><div class="line">		&lt;/property&gt;&lt;/bean&gt;</div></pre></td></tr></table></figure></p>
+<p>接着，写好bean和bean.hbm.xml映射文件，就可以使用了。要使用的类需继承HibernateDaoSupport，使用方法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class test extends HibernateDaoSupport &#123;</div><div class="line"></div><div class="line">	public void test()&#123;</div><div class="line">			</div><div class="line">		String queryString=&quot;from UserBean where id=1&quot;;</div><div class="line">		List aList = getHibernateTemplate().find(queryString);</div><div class="line">		UserBean kc1=(UserBean)aList.get(0);</div><div class="line">		System.out.println(kc1.getUserName());</div><div class="line">	  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h1><p>搭建一个S2SH框架基本没什么难点，和普通的jar包使用上差不多。而搭建一个这样的框架，好处在于可以用它搭建出一个完整的web项目来。当然，这样的框架还有很多，比如S2SM（Struts2+Spring+mybatis）等。至于它们之间的适用范围和差异，就留待以后接触到了再研究吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Struts2、Spring、Hibernate/" rel="tag"># Struts2、Spring、Hibernate</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/java/web项目添加maven支持/" rel="next" title="web项目添加maven支持">
+                <i class="fa fa-chevron-left"></i> web项目添加maven支持
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/EffectiveJava3/" rel="prev" title="（3）、类与接口">
+                （3）、类与接口 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="java/搭建S2SH框架/"
+           data-title="搭建S2SH框架" data-url="http://huangzihao.me/java/搭建S2SH框架/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、准备阶段"><span class="nav-number">1.</span> <span class="nav-text">一、准备阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、配置Struts2"><span class="nav-number">2.</span> <span class="nav-text">二、配置Struts2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、配置Spring"><span class="nav-number">3.</span> <span class="nav-text">三、配置Spring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、配置Hinbernate"><span class="nav-number">4.</span> <span class="nav-text">四、配置Hinbernate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、添加配置文件"><span class="nav-number">4.1.</span> <span class="nav-text">1、添加配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、在Spring中配置Hinbernate，"><span class="nav-number">4.2.</span> <span class="nav-text">2、在Spring中配置Hinbernate，</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、总结"><span class="nav-number">5.</span> <span class="nav-text">五、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

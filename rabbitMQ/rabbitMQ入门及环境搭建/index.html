@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rabbitMQ环境搭建," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="因为项目需要接触到了rabbitMQ，在此之前没有接触过关于这方面的内容，所以打算记录下对rabbitMQ的学习历程，这一篇是笔者对rabbitMQ的一些基础概念的了解和环境的搭建。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（1）、rabbitMQ入门及环境搭建">
+<meta property="og:url" content="http://huangzihao.me/rabbitMQ/rabbitMQ入门及环境搭建/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="因为项目需要接触到了rabbitMQ，在此之前没有接触过关于这方面的内容，所以打算记录下对rabbitMQ的学习历程，这一篇是笔者对rabbitMQ的一些基础概念的了解和环境的搭建。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E5%91%BD%E4%BB%A4%E8%A1%8C.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E6%8E%A7%E5%88%B6%E5%8F%B0.png">
+<meta property="og:updated_time" content="2016-08-14T14:49:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="（1）、rabbitMQ入门及环境搭建">
+<meta name="twitter:description" content="因为项目需要接触到了rabbitMQ，在此之前没有接触过关于这方面的内容，所以打算记录下对rabbitMQ的学习历程，这一篇是笔者对rabbitMQ的一些基础概念的了解和环境的搭建。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E5%91%BD%E4%BB%A4%E8%A1%8C.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/rabbitMQ/rabbitMQ入门及环境搭建/"/>
+
+
+
+
+
+  <title>（1）、rabbitMQ入门及环境搭建 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/rabbitMQ/rabbitMQ入门及环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">（1）、rabbitMQ入门及环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-10T09:36:16+08:00">
+                2016-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">rabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/rabbitMQ/rabbitMQ入门及环境搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="rabbitMQ/rabbitMQ入门及环境搭建/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>因为项目需要接触到了rabbitMQ，在此之前没有接触过关于这方面的内容，所以打算记录下对rabbitMQ的学习历程，这一篇是笔者对rabbitMQ的一些基础概念的了解和环境的搭建。<a id="more"></a></p>
+<h1 id="一、rabbitMQ"><a href="#一、rabbitMQ" class="headerlink" title="一、rabbitMQ"></a>一、rabbitMQ</h1><p>rabbitMQ中MQ是message queue的简写。而rabbitMQ是作为一个中间件，使用于应用与应用之间的通信，两个应用之间无需知道互相的存在，不仅有解耦作用，相对于应用之间的直接通信也更加安全，可靠。</p>
+<h1 id="二、rabbitMQ的一些基础概念"><a href="#二、rabbitMQ的一些基础概念" class="headerlink" title="二、rabbitMQ的一些基础概念"></a>二、rabbitMQ的一些基础概念</h1><p>下面是一些知道基础概念，需要了解清楚，不然开发很容易陷入一些坑。</p>
+<h2 id="1、ConnectionFactory、Connection、Channel"><a href="#1、ConnectionFactory、Connection、Channel" class="headerlink" title="1、ConnectionFactory、Connection、Channel"></a>1、ConnectionFactory、Connection、Channel</h2><p>ConnecitonFactory：从名称可以看出是一个Connection创建工厂，Channel是应用于MQ通信的通道，大部分的业务逻辑都是在Channel中实现的。包括定义Queue、Exchange、绑定RoutingKey，发布消息等等。</p>
+<h2 id="2、Queue"><a href="#2、Queue" class="headerlink" title="2、Queue"></a>2、Queue</h2><p>存放消息的队列，发布的消息存放到Queue中，消息的消费者则从Queue中取走消息，每个Queue都可以有多个的消费者。当队列中的消息比较多时，消息会平均分给订阅该队列的几个消费者去处理，而不是每个消费者都收到消息进行处理。</p>
+<h2 id="3、Message-acknowledgment"><a href="#3、Message-acknowledgment" class="headerlink" title="3、Message acknowledgment"></a>3、<strong><em>Message acknowledgment</em></strong></h2><p>消息回执：在使用的时候，为了防止消息被消费者取走后，因为某些问题而没有处理，使得消息丢失。RabbitMQ要求消费者在取走消息后需给定一个回执。RabbitMQ收到回执后才会在Queue中把被取走的消息移除掉。必须给定消息回执，在编写业务逻辑的时候需要注意。</p>
+<h2 id="4、Exchange"><a href="#4、Exchange" class="headerlink" title="4、Exchange"></a>4、Exchange</h2><p>交换区：我们在向rabbitMQ发送消息的时候，消息是会先发送到Exchange中去，Exchange会根据某些规则把消息放置到符合规则的一个或多个Queue中。Exchange有topic、direct、fount、headers四种类型，每种类型的规则都略有不同。</p>
+<h2 id="5、RoutingKey"><a href="#5、RoutingKey" class="headerlink" title="5、RoutingKey"></a>5、RoutingKey</h2><p>一般情况下，我们在创建队列后，会把该队列绑定到我们自己创建的Exchange中，而绑定的时候，需要加入一个RoutingKey，这个RoutingKey就是上面所说的规则。消息传递到Exchange后，会根据Routingkey，把消息发送到相应的队列。</p>
+<h2 id="6、RPC模式（Remote-Procedure-Call，远程过程调用）"><a href="#6、RPC模式（Remote-Procedure-Call，远程过程调用）" class="headerlink" title="6、RPC模式（Remote Procedure Call，远程过程调用）"></a>6、RPC模式（Remote Procedure Call，远程过程调用）</h2><p>从上面的几个概念中，我们知道了，当消费者取到消息后是要给定回执，告诉RabbitMQ已经收到消息了，你可以删掉那条消息了，等处理完消息后，再另外给RabbitMQ发布处理结果。而RPC模式的区别就在于，应用收到消息后，不会马上告诉RabbitMQ收到消息了，而是把消息处理完后，带着处理结果一起返回给了RabbitMQ。</p>
+<h1 id="三、安装和配置RabbitMQ"><a href="#三、安装和配置RabbitMQ" class="headerlink" title="三、安装和配置RabbitMQ"></a>三、安装和配置RabbitMQ</h1><p>讲完了RabbitMQ中几个需要知道的概念后，就可以开始动手试试了。当然，在开始练手前，得先把rabbitMQServer安装好才行。<br>rabbitMQ的服务端是基于Erlang语言编写的，所以在安装rabbitMQServer前，需要先安装Erlang环境再安装rabbitMQServer。安装完后需通过下面几个步骤配置一下rabbitMQ。</p>
+<p>1、 安装完后需要先进行配置，打开RabbitServer中的RabbitMQ Command Prompt，在安装目录的sbin下，输入命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rabbitmq-plugins enable rabbitmq_management</div></pre></td></tr></table></figure>
+<p>如果没有出现下面的内容则需要重新以管理员身份运行命令台，再输入上面的命令。<br><img src="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E5%91%BD%E4%BB%A4%E8%A1%8C.png" alt="rabbitMQ输出结果"></p>
+<p>2、接着分别输入如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rabbitmq-service.bat  stop</div><div class="line">rabbitmq-service.bat  install</div><div class="line">rabbitmq-service.bat  start</div></pre></td></tr></table></figure>
+<p>3、通过上面两个步骤后，rabbitMQServer就配置好了，我们可以打开它的控制台看看，是否能正常登录。在浏览器输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:55672/mgmt</div></pre></td></tr></table></figure></p>
+<p>rabbitMQ有提供一个账号和密码都为<strong>guest</strong>的测试账号供我们进行测试。控制台界面如下：<br><img src="http://obl32g9cf.bkt.clouddn.com/rabbitMQ%E6%8E%A7%E5%88%B6%E5%8F%B0.png" alt="RabbitMQ控制台"></p>
+<p>到此，MQ的环境搭建和配置就完成了。接下来，我们就可以通过代码进行熟悉和了解rabbitMQ了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rabbitMQ环境搭建/" rel="tag"># rabbitMQ环境搭建</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/Git、Nodejs和hexo变量配置/" rel="next" title="Git、Nodejs和hexo变量配置">
+                <i class="fa fa-chevron-left"></i> Git、Nodejs和hexo变量配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/rabbitMQ/rabbitMQ的通信流程/" rel="prev" title="（2）、rabbitMQ的通信流程">
+                （2）、rabbitMQ的通信流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="rabbitMQ/rabbitMQ入门及环境搭建/"
+           data-title="（1）、rabbitMQ入门及环境搭建" data-url="http://huangzihao.me/rabbitMQ/rabbitMQ入门及环境搭建/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、rabbitMQ"><span class="nav-number">1.</span> <span class="nav-text">一、rabbitMQ</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、rabbitMQ的一些基础概念"><span class="nav-number">2.</span> <span class="nav-text">二、rabbitMQ的一些基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、ConnectionFactory、Connection、Channel"><span class="nav-number">2.1.</span> <span class="nav-text">1、ConnectionFactory、Connection、Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、Queue"><span class="nav-number">2.2.</span> <span class="nav-text">2、Queue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、Message-acknowledgment"><span class="nav-number">2.3.</span> <span class="nav-text">3、Message acknowledgment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、Exchange"><span class="nav-number">2.4.</span> <span class="nav-text">4、Exchange</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、RoutingKey"><span class="nav-number">2.5.</span> <span class="nav-text">5、RoutingKey</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、RPC模式（Remote-Procedure-Call，远程过程调用）"><span class="nav-number">2.6.</span> <span class="nav-text">6、RPC模式（Remote Procedure Call，远程过程调用）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、安装和配置RabbitMQ"><span class="nav-number">3.</span> <span class="nav-text">三、安装和配置RabbitMQ</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

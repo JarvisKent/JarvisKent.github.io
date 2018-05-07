@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="序列化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="序列化是什么序列化是指把Java对象转换为字节序列并存储到一个存储媒介的过程。反之，把字节序列恢复为Java对象的过程则称之为反序列化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android之序列化浅析">
+<meta property="og:url" content="http://huangzihao.me/android/Android之序列化浅析/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="序列化是什么序列化是指把Java对象转换为字节序列并存储到一个存储媒介的过程。反之，把字节序列恢复为Java对象的过程则称之为反序列化。">
+<meta property="og:updated_time" content="2016-04-06T08:49:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android之序列化浅析">
+<meta name="twitter:description" content="序列化是什么序列化是指把Java对象转换为字节序列并存储到一个存储媒介的过程。反之，把字节序列恢复为Java对象的过程则称之为反序列化。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/android/Android之序列化浅析/"/>
+
+
+
+
+
+  <title>Android之序列化浅析 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/android/Android之序列化浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android之序列化浅析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-06T16:49:33+08:00">
+                2016-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/android/Android之序列化浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="android/Android之序列化浅析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="序列化是什么"><a href="#序列化是什么" class="headerlink" title="序列化是什么"></a>序列化是什么</h1><p>序列化是指<strong>把Java对象转换为字节序列并存储到一个存储媒介的过程</strong>。反之，<strong>把字节序列恢复为Java对象的过程</strong>则称之为反序列化。<a id="more"></a></p>
+<h1 id="为什么要序列化"><a href="#为什么要序列化" class="headerlink" title="为什么要序列化"></a>为什么要序列化</h1><p>Java对象存在的一个前提是JVM有在运行，因此，如果JVM没有运行或者在其他机器的JVM上是不可能获取到指定的Java对象的。而序列化操作则是把Java对象信息保存到存储媒介，可以在以上不可能的情况下仍然可以使用Java对象。<br>所以，序列化的主要作用是：</p>
+<ul>
+<li>永久性保存对象，保存对象的字节序列到本地文件中；</li>
+<li>通过序列化对象在网络中传递对象；</li>
+<li>通过序列化在进程间传递对象。</li>
+</ul>
+<h1 id="Android中序列化"><a href="#Android中序列化" class="headerlink" title="Android中序列化"></a>Android中序列化</h1><p>在Android开发中，经常需要在多个部件(Activity、Fragment或Service)之间通过Intent传递一些数据，如果是一些普通类型的数据可以通过PutExtra()进行传递，如果是对象的话就得先进行序列化才能传递了。在Android中有两种序列化的接口，Serializable和Parcelable。</p>
+<ul>
+<li>Serializable：<strong>(JavaSE本身就支持的)</strong>保存对象的属性到本地文件、数据库、网络流、rmi以方便数据传输。</li>
+<li>Parcelable：<strong>(Android特有功能)</strong>因为Serializable效率过慢，为了在程序内不同组件间以及不同Android程序间(AIDL)高效<br>的传输数据而设计，<strong>这些数据仅在内存中存在。</strong></li>
+</ul>
+<h2 id="何时使用它们"><a href="#何时使用它们" class="headerlink" title="何时使用它们"></a>何时使用它们</h2><p>Parcelable的效率会比Serializable高，数据仅存在于内存中。；而Serializable因为使用到了反射，会相对慢一些，因此，只在内存间传递数据的话推荐用Parcelable，而如果是要进行保存或者网络传输则选择Serializable。</p>
+<h2 id="Serializable接口的实现"><a href="#Serializable接口的实现" class="headerlink" title="Serializable接口的实现"></a>Serializable接口的实现</h2><p>只需要实现Serializable接口，并提供一个序列化版本id(serialVersionUID)即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public class DataBean implements Serializable&#123;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Parcelable接口的使用"><a href="#Parcelable接口的使用" class="headerlink" title="Parcelable接口的使用"></a>Parcelable接口的使用</h2><p>Parcelable实现方式略复杂一些，需重写describeContents和writeToParcel这两个方法提供一个名为CREATOR常量。实际上就是将如何打包和解包的工作自己来定义，<br>而序列化的这些操作完全由底层实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">public class DataBean implements Parcelable&#123;</div><div class="line">    private int id;</div><div class="line">    private String name;</div><div class="line">    private String Account;</div><div class="line">    private int kind;</div><div class="line">    private String password;</div><div class="line">    private String desc;</div><div class="line"></div><div class="line">    public DataBean()&#123;&#125;</div><div class="line">    // 用来创建自定义的Parcelable的对象</div><div class="line">    public static final Creator&lt;DataBean&gt; CREATOR = new Creator&lt;DataBean&gt;() &#123;</div><div class="line">        @Override</div><div class="line">        public DataBean createFromParcel(Parcel in) &#123;</div><div class="line">            return new DataBean(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public DataBean[] newArray(int size) &#123;</div><div class="line">            return new DataBean[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">   //GET SET方法</div><div class="line">   ...</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String toString() &#123;</div><div class="line">        return &quot;DataBean&#123;&quot; +</div><div class="line">                &quot;id=&quot; + id +</div><div class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</div><div class="line">                &quot;, Account=&apos;&quot; + Account + &apos;\&apos;&apos; +</div><div class="line">                &quot;, kind=&quot; + kind +</div><div class="line">                &quot;, password=&apos;&quot; + password + &apos;\&apos;&apos; +</div><div class="line">                &quot;, desc=&apos;&quot; + desc + &apos;\&apos;&apos; +</div><div class="line">                &apos;&#125;&apos;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    // 写数据进行保存</div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        dest.writeInt(this.id);</div><div class="line">        dest.writeString(this.Account);</div><div class="line">        dest.writeString(this.name);</div><div class="line">        dest.writeString(this.password);</div><div class="line">        dest.writeInt(this.kind);</div><div class="line">        dest.writeString(this.desc);</div><div class="line">    &#125;</div><div class="line">    // 读数据进行恢复</div><div class="line">    protected DataBean(Parcel in) &#123;</div><div class="line">        this.id = in.readInt();</div><div class="line">        this.kind = in.readInt();</div><div class="line">        this.password = in.readString();</div><div class="line">        this.name = in.readString();</div><div class="line">        this.Account = in.readString();</div><div class="line">        this.desc = in.readString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样就完成了对DataBean的序列化，使用的时候就可以通过Intent进行传递了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//Activity传递对象,不管是实现哪个接口都是用如下方式传递</div><div class="line">intent.putExtra(&quot;data&quot;,data);</div><div class="line"></div><div class="line">//在另一个Activity中接收对象的方式分别是：</div><div class="line">DataBean data = getIntent().getSerializableExtra(&quot;data&quot;);</div><div class="line">DataBean data = getIntent().getParcelableExtra(&quot;data&quot;);</div></pre></td></tr></table></figure></p>
+<p>Android中序列化的使用大致就是这样了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/序列化/" rel="tag"># 序列化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/android/Android之沉浸式状态栏的实现/" rel="next" title="Android之沉浸式状态栏的实现">
+                <i class="fa fa-chevron-left"></i> Android之沉浸式状态栏的实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/记与运算的一种运用方式/" rel="prev" title="记与运算的一种运用方式">
+                记与运算的一种运用方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="android/Android之序列化浅析/"
+           data-title="Android之序列化浅析" data-url="http://huangzihao.me/android/Android之序列化浅析/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序列化是什么"><span class="nav-number">1.</span> <span class="nav-text">序列化是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要序列化"><span class="nav-number">2.</span> <span class="nav-text">为什么要序列化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android中序列化"><span class="nav-number">3.</span> <span class="nav-text">Android中序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#何时使用它们"><span class="nav-number">3.1.</span> <span class="nav-text">何时使用它们</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Serializable接口的实现"><span class="nav-number">3.2.</span> <span class="nav-text">Serializable接口的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parcelable接口的使用"><span class="nav-number">3.3.</span> <span class="nav-text">Parcelable接口的使用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

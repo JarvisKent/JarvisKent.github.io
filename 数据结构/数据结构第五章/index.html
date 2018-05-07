@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="串," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="当你做某件事的时候，一旦想要求快，就表示你再不关心它，而想去做别的事。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五章：串">
+<meta property="og:url" content="http://huangzihao.me/数据结构/数据结构第五章/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="当你做某件事的时候，一旦想要求快，就表示你再不关心它，而想去做别的事。">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/5_bg.jpg">
+<meta property="og:updated_time" content="2016-08-26T13:37:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第五章：串">
+<meta name="twitter:description" content="当你做某件事的时候，一旦想要求快，就表示你再不关心它，而想去做别的事。">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/5_bg.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://huangzihao.me/数据结构/数据结构第五章/"/>
+
+
+
+
+
+  <title>第五章：串 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://huangzihao.me/数据结构/数据结构第五章/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第五章：串</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-26T21:26:36+08:00">
+                2016-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/数据结构/数据结构第五章/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="数据结构/数据结构第五章/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://obl32g9cf.bkt.clouddn.com/5_bg.jpg" alt="配图"><br>当你做某件事的时候，一旦想要求快，就表示你再不关心它，而想去做别的事。<a id="more"></a></p>
+<h1 id="一、串的定义"><a href="#一、串的定义" class="headerlink" title="一、串的定义"></a>一、串的定义</h1><blockquote>
+<p>串是由零个或多个字符组成的有限序列，又名叫字符串。</p>
+</blockquote>
+<p>一般记为s=”a1 a2 a3 …an”(n&gt;=0)。n称为串的长度，零个字符的串称为空串（null string）。</p>
+<p>需要知道的几个概念</p>
+<ul>
+<li>空格串:是只包含空格的串。空格串是有内容有长度的，而且可以不止一个空格。</li>
+<li>子串和主串：串中任意个数的连续字符组成的子序列成为该串的子串，相应的，包含子串的串称为主串。如“over”是“lover”的子串，“end”是“friend”的子串灯。</li>
+</ul>
+<h1 id="二、串的比较"><a href="#二、串的比较" class="headerlink" title="二、串的比较"></a>二、串的比较</h1><p>串的比较是通过组成串的字符之间的编码来进行的，而字符编码指的是字符在对应字符集（如ASCII码或者Unicode编码）中的序号。</p>
+<p>两个串不相等时，通过下面的定义来判断它们的大小：</p>
+<ul>
+<li>给定两个串：s=a”1a2…an”，t=“b1b2…bm”，当满足一下条件之一时，s&lt;t。</li>
+</ul>
+<ol>
+<li>n&lt;m，且ai=bi(i=1，2，3，…，n)。</li>
+<li>存在某个k&lt;=min(m，n),使得ai=bi(i=1,2,3,…,k-1)，ak&lt;bk。</li>
+</ol>
+<h1 id="三、串的抽象数据类型"><a href="#三、串的抽象数据类型" class="headerlink" title="三、串的抽象数据类型"></a>三、串的抽象数据类型</h1><p>串的逻辑结构和线性表很相似，不同之处在于串针对的是字符集，串中的元素是字符。因此对串的基本操作与线性表是有很大差别的。线性表更关注单个元素的操作，比如查找一个元素，删除或插入一个元素，而串更多的是查找子串的位置，得到指定位置的子串，替换子串等操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">ADT 串 (string)</div><div class="line"></div><div class="line">DATA</div><div class="line">    串中元素仅由一个字符组成，相邻元素具有前驱和后继关系。</div><div class="line">Operation</div><div class="line">    StrAssign(T , *chars):生成一个其值等于字符串常量chars的串T。</div><div class="line">    StrCopy(T ， S) :串S存在，由串S复制得串T。</div><div class="line">    ClearString(S):串S存在，将串清空</div><div class="line">    StringEmpty(S):若串S为空，返回true，否则返回false。</div><div class="line">    StrLength(S):返回串S的元素个数，即串的长度。</div><div class="line">    StrCompare(S,T):若S&gt;T,返回值&gt;0，若相等，返回0，若小于，返回值&lt;0</div><div class="line">    Concat(T,S1,S2):用T返回由S1和S2连接而成的新串。</div><div class="line">    SubString(Sub,S,pos,len):串S存在，1&lt;=pos&lt;=StrLength(s),且0&lt;=LEN&lt;=StrLength(S) - pos + 1,用sub返回串S的第pos个字符串起长度为len的子串。</div><div class="line">    Index(S,T,pos):串S和T存在，T是非空串，1&lt;=pos&lt;=StrLength(s)。若主串S中存在和串T相同的子串，则返回它在主串S中第pos个字符之后第一次出现的位置，否则返回0。</div><div class="line">    Replace(S,T,V)：串S、T和V存在，T是非空串。用V替换主串S中出现的所有与T相等的不重叠子串。</div><div class="line">    StrInsert（S，pos，T）：串S和T存在，1&lt;=pos&lt;=StrLength(S) +1。在串S的第pos个字符之前插入串T。</div><div class="line">    StrDelete（S，pos，len）：串S存在，1&lt;=pos&lt;=StrLength(S) - len + 1。从串S中删除第pos个字符起长度为len的子串。</div><div class="line"></div><div class="line">endADT</div></pre></td></tr></table></figure>
+<p>其实，在java里还有ToLower、IndexOf等操作，它们是对基本操作的拓展函数。</p>
+<p>操作Index的实现算法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">/*T为非空串，若主串S第pos个字符后存在与T相等的子串，则返回第一个这样的子串在S中的位置，否则返回0 */</div><div class="line">int Index(String S,String T,int pos)&#123;</div><div class="line">    int ,m,i;</div><div class="line">    String sub;</div><div class="line">    if(pos &gt; 0)&#123;</div><div class="line">        n = StrLength(S);    //获取S长度</div><div class="line">        m = StrLength(T);</div><div class="line">        i = pos;</div><div class="line">        while(i &lt;= n-m+1)&#123;</div><div class="line">            SubString(sub,S,i,m);</div><div class="line">            if(StrCompare(sub,T) != 0)&#123;</div><div class="line">                    ++i;</div><div class="line">               &#125;else&#123;</div><div class="line">                    return i;</div><div class="line">               &#125;</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="四、串的存储结构"><a href="#四、串的存储结构" class="headerlink" title="四、串的存储结构"></a>四、串的存储结构</h1><p>串的存储结构与线性表相同，分为顺序存储结构和链式存储结构。</p>
+<h2 id="1、串的顺序存储结构"><a href="#1、串的顺序存储结构" class="headerlink" title="1、串的顺序存储结构"></a>1、串的顺序存储结构</h2><blockquote>
+<p>串的顺序存储结构是用一组地址连续的存储单元来存储串中的字符序列的。一般是用定长数组来定义。</p>
+</blockquote>
+<h2 id="2、串的链式存储结构"><a href="#2、串的链式存储结构" class="headerlink" title="2、串的链式存储结构"></a>2、串的链式存储结构</h2><p>串的链式存储结构，与线性表是相似的，由于串中的每个元素数据是字符，如果只是一个结点对应一个字符的话，就会存在很大的空间浪费。因此需要考虑一个结点是存放一个字符还是多个字符，若最后一个结点未占满，则可以用“#”或其他非串值字符补全。但串的链式存储结构除了在链接串与串操作时有一定方便外，总的来说不如顺序存储灵活，性能也没有顺序存储结构好。</p>
+<h1 id="五、朴素的模式匹配算法"><a href="#五、朴素的模式匹配算法" class="headerlink" title="五、朴素的模式匹配算法"></a>五、朴素的模式匹配算法</h1><blockquote>
+<p>子串的定位操作通常称为串的模式匹配。</p>
+</blockquote>
+<h2 id="1、主串中找到子串的位置"><a href="#1、主串中找到子串的位置" class="headerlink" title="1、主串中找到子串的位置"></a>1、主串中找到子串的位置</h2><p>如从主串s=“goodgoogle”中，找到t=“google”这个子串的位置。通常是对主串中的每一个字符作为子串开头，与要匹配的字符串进行匹配，对主串做一个大循环，每个字符开头做t的长度的小循环，直到匹配成功或者全部遍历完成为止。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*返回子串T在主串S中的pos个字符后的位置。不存在则返回0。*/</div><div class="line">int Index(String S,String T,int pos)&#123;</div><div class="line">    int i = pos;</div><div class="line">    int j = 1;</div><div class="line">    while(i &lt;=S[0] &amp;&amp; j &lt;=T[0])&#123;</div><div class="line">        if(S[i] == T[j])&#123;</div><div class="line">            ++i;</div><div class="line">            ++j;</div><div class="line">         &#125;else&#123;</div><div class="line">                i = i - j + 2;</div><div class="line">                j = 1;</div><div class="line">         &#125;</div><div class="line">   &#125;</div><div class="line">   if(j &gt; T[0])&#123;</div><div class="line">        return i - T[0];</div><div class="line">     &#125;else</div><div class="line">        return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="六、KMP模式匹配算法"><a href="#六、KMP模式匹配算法" class="headerlink" title="六、KMP模式匹配算法"></a>六、KMP模式匹配算法</h1><p>如果是用朴素匹配算法， 主串的i值是不断地回溯来完成。而其实这些回溯都是不必要的KMP模式匹配算法就是为了让不必要的回溯不发生。</p>
+<p>关于KMP模式匹配算法后面就不记录了，打算有空的时候再另外研究下。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/串/" rel="tag"># 串</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/数据结构/数据结构第四章/" rel="next" title="第四章：栈和队列">
+                <i class="fa fa-chevron-left"></i> 第四章：栈和队列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/数据结构/第六章：树（1）/" rel="prev" title="第六章：树（1）">
+                第六章：树（1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="数据结构/数据结构第五章/"
+           data-title="第五章：串" data-url="http://huangzihao.me/数据结构/数据结构第五章/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">Tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、串的定义"><span class="nav-number">1.</span> <span class="nav-text">一、串的定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、串的比较"><span class="nav-number">2.</span> <span class="nav-text">二、串的比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、串的抽象数据类型"><span class="nav-number">3.</span> <span class="nav-text">三、串的抽象数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、串的存储结构"><span class="nav-number">4.</span> <span class="nav-text">四、串的存储结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、串的顺序存储结构"><span class="nav-number">4.1.</span> <span class="nav-text">1、串的顺序存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、串的链式存储结构"><span class="nav-number">4.2.</span> <span class="nav-text">2、串的链式存储结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、朴素的模式匹配算法"><span class="nav-number">5.</span> <span class="nav-text">五、朴素的模式匹配算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、主串中找到子串的位置"><span class="nav-number">5.1.</span> <span class="nav-text">1、主串中找到子串的位置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、KMP模式匹配算法"><span class="nav-number">6.</span> <span class="nav-text">六、KMP模式匹配算法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
