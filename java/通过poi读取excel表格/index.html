@@ -83,19 +83,16 @@
 
 
 
-<meta name="description" content="读取excel表格
-import java.io.FileInputStream;import java.io.FileNotFoundException;import java.io.IOException;import java.io.InputStream;import java.util.Date;import java.util.HashMap;import java.util.Map;">
+<meta name="description" content="纯代码，慎入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过poi读取excel表格">
 <meta property="og:url" content="http://jarvishuang.com/java/通过poi读取excel表格/index.html">
 <meta property="og:site_name" content="Jarvis’s Blog">
-<meta property="og:description" content="读取excel表格
-import java.io.FileInputStream;import java.io.FileNotFoundException;import java.io.IOException;import java.io.InputStream;import java.util.Date;import java.util.HashMap;import java.util.Map;">
-<meta property="og:updated_time" content="2018-05-08T01:51:26.000Z">
+<meta property="og:description" content="纯代码，慎入">
+<meta property="og:updated_time" content="2018-05-08T02:24:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过poi读取excel表格">
-<meta name="twitter:description" content="读取excel表格
-import java.io.FileInputStream;import java.io.FileNotFoundException;import java.io.IOException;import java.io.InputStream;import java.util.Date;import java.util.HashMap;import java.util.Map;">
+<meta name="twitter:description" content="纯代码，慎入">
 
 
 
@@ -345,110 +342,7 @@ import java.io.FileInputStream;import java.io.FileNotFoundException;import java.
       
 
       
-        <p>读取excel表格</p>
-<p>import java.io.FileInputStream;<br>import java.io.FileNotFoundException;<br>import java.io.IOException;<br>import java.io.InputStream;<br>import java.util.Date;<br>import java.util.HashMap;<br>import java.util.Map;      </p>
-<p>import org.apache.poi.hssf.usermodel.HSSFCell;<br>import org.apache.poi.hssf.usermodel.HSSFRow;<br>import org.apache.poi.hssf.usermodel.HSSFSheet;<br>import org.apache.poi.hssf.usermodel.HSSFWorkbook;<br>import org.apache.poi.poifs.filesystem.POIFSFileSystem;      </p>
-<p>/**    </p>
-<ul>
-<li>操作Excel表格的功能类    </li>
-<li>@author：    </li>
-<li><p>@version 1.0<br><em>/<br>public class ExcelReader {<br> private POIFSFileSystem fs;<br> private HSSFWorkbook wb;<br> private HSSFSheet sheet;<br> private HSSFRow row;<br> /*</em>    </p>
-<ul>
-<li>读取Excel表格表头的内容    </li>
-<li>@param InputStream    </li>
-<li>@return String 表头内容的数组    </li>
-<li><p>*/<br>public String[] readExcelTitle(InputStream is) {<br>try {<br> fs = new POIFSFileSystem(is);<br> wb = new HSSFWorkbook(fs);<br>} catch (IOException e) {<br> e.printStackTrace();<br>}<br>sheet = wb.getSheetAt(0);<br>row = sheet.getRow(0);<br>//标题总列数<br>int colNum = row.getPhysicalNumberOfCells();<br>String[] title = new String[colNum];<br>for (int i=0; i&lt;colNum; i++) {<br> title[i] = getStringCellValue(row.getCell((short) i));<br>}<br>return title;<br>}      </p>
-<p>/**    </p>
-</li>
-<li>读取Excel数据内容    </li>
-<li>@param InputStream    </li>
-<li><p>@return Map 包含单元格数据内容的Map对象<br>*/<br>public Map<integer,string> readExcelContent(InputStream is) {<br> Map<integer,string> content = new HashMap<integer,string>();<br> String str = “”;<br> try {      </integer,string></integer,string></integer,string></p>
-<pre><code>fs = new POIFSFileSystem(is);      
-wb = new HSSFWorkbook(fs);      
-</code></pre><p> } catch (IOException e) {      </p>
-<pre><code>e.printStackTrace();      
-</code></pre><p> }<br> sheet = wb.getSheetAt(0);<br> //得到总行数<br> int rowNum = sheet.getLastRowNum();<br> row = sheet.getRow(0);<br> int colNum = row.getPhysicalNumberOfCells();<br> //正文内容应该从第二行开始,第一行为表头的标题<br> for (int i = 1; i &lt;= rowNum; i++) {      </p>
-<pre><code>row = sheet.getRow(i);      
-int j = 0;      
-while (j&lt;colNum) {      
-</code></pre><p> //每个单元格的数据内容用”-“分割开，以后需要时用String类的replace()方法还原数据<br> //也可以将每个单元格的数据设置到一个javabean的属性中，此时需要新建一个javabean      </p>
-<pre><code>    str += getStringCellValue(row.getCell((short) j)).trim() + &quot;-&quot;;      
-    j ++;      
-}      
-content.put(i, str);      
-str = &quot;&quot;;      
-</code></pre><p> }<br> return content;<br>}      </p>
-<p>/**    </p>
-</li>
-<li>获取单元格数据内容为字符串类型的数据    </li>
-<li>@param cell Excel单元格    </li>
-<li><p>@return String 单元格数据内容<br>*/<br>private String getStringCellValue(HSSFCell cell) {<br> String strCell = “”;<br> switch (cell.getCellType()) {<br> case HSSFCell.CELL_TYPE_STRING:      </p>
-<pre><code>strCell = cell.getStringCellValue();      
-break;      
-</code></pre><p> case HSSFCell.CELL_TYPE_NUMERIC:      </p>
-<pre><code>strCell = String.valueOf(cell.getNumericCellValue());      
-break;      
-</code></pre><p> case HSSFCell.CELL_TYPE_BOOLEAN:      </p>
-<pre><code>strCell = String.valueOf(cell.getBooleanCellValue());      
-break;      
-</code></pre><p> case HSSFCell.CELL_TYPE_BLANK:      </p>
-<pre><code>strCell = &quot;&quot;;      
-break;      
-</code></pre><p> default:      </p>
-<pre><code>strCell = &quot;&quot;;      
-break;      
-</code></pre><p> }<br> if (strCell.equals(“”) || strCell == null) {      </p>
-<pre><code>return &quot;&quot;;      
-</code></pre><p> }<br> if (cell == null) {      </p>
-<pre><code>return &quot;&quot;;      
-</code></pre><p> }<br> return strCell;<br>}      </p>
-<p>/**    </p>
-</li>
-<li>获取单元格数据内容为日期类型的数据    </li>
-<li>@param cell Excel单元格    </li>
-<li><p>@return String 单元格数据内容<br>*/<br>private String getDateCellValue(HSSFCell cell) {<br> String result = “”;<br> try {      </p>
-<pre><code>int cellType = cell.getCellType();      
-if (cellType == HSSFCell.CELL_TYPE_NUMERIC) {      
-    Date date = cell.getDateCellValue();      
-    result = (date.getYear() + 1900) + &quot;-&quot; + (date.getMonth() + 1)       
-    + &quot;-&quot; + date.getDate();      
-} else if (cellType == HSSFCell.CELL_TYPE_STRING) {      
-    String date = getStringCellValue(cell);      
-    result = date.replaceAll(&quot;[年月]&quot;, &quot;-&quot;).replace(&quot;日&quot;, &quot;&quot;).trim();      
-} else if (cellType == HSSFCell.CELL_TYPE_BLANK) {      
-    result = &quot;&quot;;      
-}      
-</code></pre><p> } catch (Exception e) {      </p>
-<pre><code>System.out.println(&quot;日期格式不正确!&quot;);      
-e.printStackTrace();      
-</code></pre><p> }<br> return result;<br>}      </p>
-<p>public static void main(String[] args) {<br> try {      </p>
-<pre><code>//对读取Excel表格标题测试      
-InputStream is = new FileInputStream(&quot;C://Excel表格测试.xls&quot;);      
-ExcelReader excelReader = new ExcelReader();      
-String[] title = excelReader.readExcelTitle(is);
-
-System.out.println(&quot;获得Excel表格的标题:&quot;);      
-for (String s : title) {      
-    System.out.print(s + &quot; &quot;);      
-}      
-
-System.out.println();     
-//对读取Excel表格内容测试      
-InputStream is2 = new FileInputStream(&quot;C://Excel表格测试.xls&quot;);      
-Map&lt;Integer,String&gt; map = excelReader.readExcelContent(is2);      
-System.out.println(&quot;获得Excel表格的内容:&quot;);      
-for (int i=1; i&lt;=map.size(); i++) {      
-    System.out.println(map.get(i));      
-}      
-</code></pre><p> } catch (FileNotFoundException e) {      </p>
-<pre><code>System.out.println(&quot;未找到指定路径的文件!&quot;);      
-e.printStackTrace();      
-</code></pre><p> }<br>}<br>}</p>
-</li>
-</ul>
-</li>
-</ul>
+        <p>纯代码，慎入<br><a id="more"></a><br>读取excel表格<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div></pre></td><td class="code"><pre><div class="line">import java.io.FileInputStream;      </div><div class="line">import java.io.FileNotFoundException;      </div><div class="line">import java.io.IOException;      </div><div class="line">import java.io.InputStream;      </div><div class="line">import java.util.Date;      </div><div class="line">import java.util.HashMap;      </div><div class="line">import java.util.Map;      </div><div class="line">     </div><div class="line">import org.apache.poi.hssf.usermodel.HSSFCell;      </div><div class="line">import org.apache.poi.hssf.usermodel.HSSFRow;      </div><div class="line">import org.apache.poi.hssf.usermodel.HSSFSheet;      </div><div class="line">import org.apache.poi.hssf.usermodel.HSSFWorkbook;      </div><div class="line">import org.apache.poi.poifs.filesystem.POIFSFileSystem;      </div><div class="line">     </div><div class="line">/**    </div><div class="line"> * 操作Excel表格的功能类    </div><div class="line"> * @author：    </div><div class="line"> * @version 1.0    </div><div class="line"> */     </div><div class="line">public class ExcelReader &#123;      </div><div class="line">    private POIFSFileSystem fs;      </div><div class="line">    private HSSFWorkbook wb;      </div><div class="line">    private HSSFSheet sheet;      </div><div class="line">    private HSSFRow row;      </div><div class="line">    /**    </div><div class="line">     * 读取Excel表格表头的内容    </div><div class="line">     * @param InputStream    </div><div class="line">     * @return String 表头内容的数组    </div><div class="line">     *     </div><div class="line">     */     </div><div class="line">    public String[] readExcelTitle(InputStream is) &#123;      </div><div class="line">        try &#123;      </div><div class="line">            fs = new POIFSFileSystem(is);      </div><div class="line">            wb = new HSSFWorkbook(fs);      </div><div class="line">        &#125; catch (IOException e) &#123;      </div><div class="line">            e.printStackTrace();      </div><div class="line">        &#125;      </div><div class="line">        sheet = wb.getSheetAt(0);      </div><div class="line">        row = sheet.getRow(0);      </div><div class="line">        //标题总列数      </div><div class="line">        int colNum = row.getPhysicalNumberOfCells();      </div><div class="line">        String[] title = new String[colNum];      </div><div class="line">        for (int i=0; i&lt;colNum; i++) &#123;      </div><div class="line">            title[i] = getStringCellValue(row.getCell((short) i));      </div><div class="line">        &#125;      </div><div class="line">        return title;      </div><div class="line">    &#125;      </div><div class="line">          </div><div class="line">    /**    </div><div class="line">     * 读取Excel数据内容    </div><div class="line">     * @param InputStream    </div><div class="line">     * @return Map 包含单元格数据内容的Map对象    </div><div class="line">     */     </div><div class="line">    public Map&lt;Integer,String&gt; readExcelContent(InputStream is) &#123;      </div><div class="line">        Map&lt;Integer,String&gt; content = new HashMap&lt;Integer,String&gt;();      </div><div class="line">        String str = &quot;&quot;;      </div><div class="line">        try &#123;      </div><div class="line">            fs = new POIFSFileSystem(is);      </div><div class="line">            wb = new HSSFWorkbook(fs);      </div><div class="line">        &#125; catch (IOException e) &#123;      </div><div class="line">            e.printStackTrace();      </div><div class="line">        &#125;      </div><div class="line">        sheet = wb.getSheetAt(0);      </div><div class="line">        //得到总行数      </div><div class="line">        int rowNum = sheet.getLastRowNum();      </div><div class="line">        row = sheet.getRow(0);      </div><div class="line">        int colNum = row.getPhysicalNumberOfCells();      </div><div class="line">        //正文内容应该从第二行开始,第一行为表头的标题      </div><div class="line">        for (int i = 1; i &lt;= rowNum; i++) &#123;      </div><div class="line">            row = sheet.getRow(i);      </div><div class="line">            int j = 0;      </div><div class="line">            while (j&lt;colNum) &#123;      </div><div class="line">        //每个单元格的数据内容用&quot;-&quot;分割开，以后需要时用String类的replace()方法还原数据      </div><div class="line">        //也可以将每个单元格的数据设置到一个javabean的属性中，此时需要新建一个javabean      </div><div class="line">                str += getStringCellValue(row.getCell((short) j)).trim() + &quot;-&quot;;      </div><div class="line">                j ++;      </div><div class="line">            &#125;      </div><div class="line">            content.put(i, str);      </div><div class="line">            str = &quot;&quot;;      </div><div class="line">        &#125;      </div><div class="line">        return content;      </div><div class="line">    &#125;      </div><div class="line">          </div><div class="line">    /**    </div><div class="line">     * 获取单元格数据内容为字符串类型的数据    </div><div class="line">     * @param cell Excel单元格    </div><div class="line">     * @return String 单元格数据内容    </div><div class="line">     */     </div><div class="line">    private String getStringCellValue(HSSFCell cell) &#123;      </div><div class="line">        String strCell = &quot;&quot;;      </div><div class="line">        switch (cell.getCellType()) &#123;      </div><div class="line">        case HSSFCell.CELL_TYPE_STRING:      </div><div class="line">            strCell = cell.getStringCellValue();      </div><div class="line">            break;      </div><div class="line">        case HSSFCell.CELL_TYPE_NUMERIC:      </div><div class="line">            strCell = String.valueOf(cell.getNumericCellValue());      </div><div class="line">            break;      </div><div class="line">        case HSSFCell.CELL_TYPE_BOOLEAN:      </div><div class="line">            strCell = String.valueOf(cell.getBooleanCellValue());      </div><div class="line">            break;      </div><div class="line">        case HSSFCell.CELL_TYPE_BLANK:      </div><div class="line">            strCell = &quot;&quot;;      </div><div class="line">            break;      </div><div class="line">        default:      </div><div class="line">            strCell = &quot;&quot;;      </div><div class="line">            break;      </div><div class="line">        &#125;      </div><div class="line">        if (strCell.equals(&quot;&quot;) || strCell == null) &#123;      </div><div class="line">            return &quot;&quot;;      </div><div class="line">        &#125;      </div><div class="line">        if (cell == null) &#123;      </div><div class="line">            return &quot;&quot;;      </div><div class="line">        &#125;      </div><div class="line">        return strCell;      </div><div class="line">    &#125;      </div><div class="line">          </div><div class="line">    /**    </div><div class="line">     * 获取单元格数据内容为日期类型的数据    </div><div class="line">     * @param cell Excel单元格    </div><div class="line">     * @return String 单元格数据内容    </div><div class="line">     */     </div><div class="line">    private String getDateCellValue(HSSFCell cell) &#123;      </div><div class="line">        String result = &quot;&quot;;      </div><div class="line">        try &#123;      </div><div class="line">            int cellType = cell.getCellType();      </div><div class="line">            if (cellType == HSSFCell.CELL_TYPE_NUMERIC) &#123;      </div><div class="line">                Date date = cell.getDateCellValue();      </div><div class="line">                result = (date.getYear() + 1900) + &quot;-&quot; + (date.getMonth() + 1)       </div><div class="line">                + &quot;-&quot; + date.getDate();      </div><div class="line">            &#125; else if (cellType == HSSFCell.CELL_TYPE_STRING) &#123;      </div><div class="line">                String date = getStringCellValue(cell);      </div><div class="line">                result = date.replaceAll(&quot;[年月]&quot;, &quot;-&quot;).replace(&quot;日&quot;, &quot;&quot;).trim();      </div><div class="line">            &#125; else if (cellType == HSSFCell.CELL_TYPE_BLANK) &#123;      </div><div class="line">                result = &quot;&quot;;      </div><div class="line">            &#125;      </div><div class="line">        &#125; catch (Exception e) &#123;      </div><div class="line">            System.out.println(&quot;日期格式不正确!&quot;);      </div><div class="line">            e.printStackTrace();      </div><div class="line">        &#125;      </div><div class="line">        return result;      </div><div class="line">    &#125;      </div><div class="line">          </div><div class="line">    public static void main(String[] args) &#123;      </div><div class="line">        try &#123;      </div><div class="line">            //对读取Excel表格标题测试      </div><div class="line">            InputStream is = new FileInputStream(&quot;C://Excel表格测试.xls&quot;);      </div><div class="line">            ExcelReader excelReader = new ExcelReader();      </div><div class="line">            String[] title = excelReader.readExcelTitle(is);</div><div class="line">           </div><div class="line">            System.out.println(&quot;获得Excel表格的标题:&quot;);      </div><div class="line">            for (String s : title) &#123;      </div><div class="line">                System.out.print(s + &quot; &quot;);      </div><div class="line">            &#125;      </div><div class="line">            </div><div class="line">            System.out.println();     </div><div class="line">            //对读取Excel表格内容测试      </div><div class="line">            InputStream is2 = new FileInputStream(&quot;C://Excel表格测试.xls&quot;);      </div><div class="line">            Map&lt;Integer,String&gt; map = excelReader.readExcelContent(is2);      </div><div class="line">            System.out.println(&quot;获得Excel表格的内容:&quot;);      </div><div class="line">            for (int i=1; i&lt;=map.size(); i++) &#123;      </div><div class="line">                System.out.println(map.get(i));      </div><div class="line">            &#125;      </div><div class="line">        &#125; catch (FileNotFoundException e) &#123;      </div><div class="line">            System.out.println(&quot;未找到指定路径的文件!&quot;);      </div><div class="line">            e.printStackTrace();      </div><div class="line">        &#125;      </div><div class="line">    &#125;      </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -556,7 +450,7 @@ e.printStackTrace();
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">黄自豪</p>
-              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+              <p class="site-description motion-element" itemprop="description">万物皆有裂缝处，那是光照进来的地方！</p>
           </div>
 
           <nav class="site-state motion-element">
