@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java虚拟机，垃圾收集器," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在HotSpot虚拟机中，有7种作用于不同分代的收集器，如下图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6、垃圾收集器">
+<meta property="og:url" content="http://jarvishuang.com/Java虚拟机/6、垃圾收集器/index.html">
+<meta property="og:site_name" content="Jarvis’s Blog">
+<meta property="og:description" content="在HotSpot虚拟机中，有7种作用于不同分代的收集器，如下图：">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/Serial%E5%92%8CSerialOld%E6%94%B6%E9%9B%86%E5%99%A8%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/ParNew%E5%92%8CSerialOld.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/ParallelScavenge%E5%92%8CParallelOld.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/CMS%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://obl32g9cf.bkt.clouddn.com/G1.png">
+<meta property="og:updated_time" content="2018-05-08T02:08:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="6、垃圾收集器">
+<meta name="twitter:description" content="在HotSpot虚拟机中，有7种作用于不同分代的收集器，如下图：">
+<meta name="twitter:image" content="http://obl32g9cf.bkt.clouddn.com/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://jarvishuang.com/Java虚拟机/6、垃圾收集器/"/>
+
+
+
+
+
+  <title>6、垃圾收集器 | Jarvis’s Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jarvis’s Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">黄自豪的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://jarvishuang.com/Java虚拟机/6、垃圾收集器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄自豪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jarvis’s Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">6、垃圾收集器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-13T14:33:10+08:00">
+                2017-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/Java虚拟机/6、垃圾收集器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="Java虚拟机/6、垃圾收集器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在HotSpot虚拟机中，有7种作用于不同分代的收集器，如下图：</p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png" alt="垃圾收集器"><a id="more"></a></p>
+<p>其中两个收集器之间存在的连线，即表示它们可以搭配使用。收集器所处区域，表示它属于新生代或者老年代收集器。</p>
+<h1 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h1><p>这是最基本的收集器，是一个单线程收集器，单线程不是指它只会使用一个CPU或者一条收集线程去完成工作，而是它垃圾收集时，必须暂停所有工作线程，直到收集结束。如下图，展示的是Serial/Serial Old收集器的运行情况。<br><img src="http://obl32g9cf.bkt.clouddn.com/Serial%E5%92%8CSerialOld%E6%94%B6%E9%9B%86%E5%99%A8%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Serial和Serial Old运行示意图"></p>
+<p>直至现在，它依然是虚拟机运行Client模式下默认的新生代收集器。它简单高效，对于单个CPU环境来说，没有线程交互的开销，专心收集垃圾完全获得了最高的单线程回收效率。</p>
+<p>在用户的桌面应用场景中，一般分配给虚拟机的内存也不会很大（仅新生代的内存只在几十M到一两百M之间），收集新生代的停顿时间可以控制在几十毫秒到一百多毫秒之内，是Client模式下的虚拟机是个不错的选择。</p>
+<h1 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h1><p>其实是Serial收集器的多线程版本，除了手机时使用多线程，其余的参数设置、收集算法、暂停所有线程，对象分配规则，回收策略等都和Serial一样。下图是ParNew和Serial Old运行示意图。</p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/ParNew%E5%92%8CSerialOld.png" alt="ParNew和Serial Old"></p>
+<p>它是运行在Server模式下的虚拟机首选的新生代收集器。目前只有ParNew收集器可以与CMS收集器（CMS是老年代收集器）配合工作。CMS收集器是真正意义上的第一款并发收集器，可以让垃圾收集线程和用户线程同时工作。</p>
+<p>单线程的时候，ParNew的效率不会比Serial好，而随着CPU的增加，它的效率也会随之提高，它默认开启的线程数与CPU数量相同。线程数可以使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-XX:ParallelGCThreads</div></pre></td></tr></table></figure></p>
+<p>来配置。</p>
+<h1 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h1><p>Parallel Scavenge是一个新生代收集器，它也是使用复制算法。也是并行的多线程收集器。</p>
+<p>它的关注点和别的收集器有点区别，别的收集器是尽可能缩短垃圾回收时用户线程的停顿时间，而它则是达到一个可控制的吞吐量。即CPU用于运行用户代码时间与CPU总时间的比值，即吞吐量=运行用户代码时间/（运行用户代码时间+垃圾收集时间）。</p>
+<p>该收集器有三个参数配置：</p>
+<ul>
+<li><p>-XX:MaxGCPauseMillis<br>该参数允许一个大于0的毫秒数，收集器会尽量保证内存回收不超过这个设定值。如果设置的时间过小，收集器就会牺牲吞吐量时间和新生代空间来换取时间的缩短，当然，也会导致垃圾收集更频繁。</p>
+</li>
+<li><p>-XX:GCTimeRatio<br>可以设置为一个大于0小于100的整数，该参数指的是垃圾收集时间占总时间的比率。</p>
+</li>
+<li><p>-XX:+UseAdaptiveSizePolicy<br>是一个开关参数，该参数打开就不需要指定新生代和老年代的大小了，也不需要设置Eden与Survivor的比例。虚拟机会动态调整，对于收集器运行不太了解，可以选择使用该收集器，自适应调整策略。使用该参数只需要设置一个基本的内存数据，还有-XX:MaxGCPauseMillis和-XX:GCTimeRatio即可。</p>
+</li>
+</ul>
+<h1 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h1><p>是Serial收集器的老年代版本，它也是一个单线程收集器，使用“标记-整理”算法。它主要也是给Client下的虚拟机使用，在Server模式，有两大用途：</p>
+<ul>
+<li>与Parallel Scavenge收集器搭配使用（在Parallel Scavenge本身有PS MarkSweep来进行老年代收集，不过它的实现与Serial Old非常接近）</li>
+<li>做为CMS收集器的后备预案，在并发收集Concurrent Mode Failure时使用。</li>
+</ul>
+<h1 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h1><p>是Parallel Scavenge收集器的老年代版本，使用多线程和“标记-整理”算法。在该收集器出现前，老年代因为都是单线程收集，无法充分利用服务器多CPU处理能力，吞吐量还不一定有ParNew+CMS给力，该收集器出现后，“吞吐量优先”收集器才算是有了真正的组合。在注重吞吐量与CPU资源敏感的场合，都可以先考虑使用Parallel Scavenge+Parallel Old收集器。<br><img src="http://obl32g9cf.bkt.clouddn.com/ParallelScavenge%E5%92%8CParallelOld.png" alt="ParallelScavenge和ParallelOld"></p>
+<h1 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h1><p>CMS(Concurrent Mark Sweep)收集器是一种以获取最短回收停顿时间为目标的收集器。现在的Java应用集中在互联网站或者B/S系统的服务端上，较注重服务响应速度，停顿时间短，才能给用户带来较好的体验。</p>
+<p>该收集器基于“标记-清除”算法，运行步骤主要有四个：</p>
+<ul>
+<li>初始标记（CMS initial mark）</li>
+<li>并发标记（CMS concurrent mark）</li>
+<li>重新标记（CMS remark）</li>
+<li>并发清除（CMS concurrent sweep）</li>
+</ul>
+<p>在初始标记和重新标记时需要停止用户线程。初始标记仅仅只是标记GC Roots能直接关联到的对象，速度快；并发标记就是进行GC RootsTracing的过程；重新标记则是为了修正并发标记期间因用户进行运作而产生改动的那一部分对象的标记记录，这一阶段的停顿时间会比初始标记稍长，但远比并发标记短。</p>
+<p>整个阶段耗时最长的是并发标记和并发清除了，不过因为可以和用户线程一起工作，所以总体可以认为内存回收是和用户线程并发执行的。<br>运行示意图如下：<br><img src="http://obl32g9cf.bkt.clouddn.com/CMS%E8%BF%90%E8%A1%8C%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="CMS运行示意图"></p>
+<p>不过CMS有三个明显缺点：</p>
+<ul>
+<li>对CPU资源非常敏感：虽然不会导致用户线程停顿，却会占用一部分线程而导致应用程序变慢，总体吞吐量降低。默认启动的回收线程数是（CPU数量+3）/4。也就是回收垃圾线程数不少于1/4的Cpu资源，随着CPU增多而下降。当然，当CPU不足四个的话，影响就很大了。</li>
+<li>CMS收集器无法处理浮动垃圾（Floating Garbage），可能出现“Concurrent Mode Failure”而导致另一次Full GC的产生。因为并发运行，所以在标记过程，肯定还有不断的新垃圾产生，这部分只能留待下次GC再清理。所以，也就需要通过调整参数预留一部分空间给并发运行产生的新垃圾了。</li>
+<li>因为是使用“标记-清除”算法，所以会出现大量空间碎片，给大对象分配造成麻烦，解决这个问题需要开启-XX:UseCMSCompactAtFullCollection这个参数，当要进行FullGC时，就会把空间碎片也进行整理，还有一个-XX:CMSFullGCsBeforeCompaction，这个参数是用于设置执行多次FullGC后才进行一次空间碎片的整理压缩。如果为0，则每次都进行碎片整理。</li>
+</ul>
+<h1 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h1><p>是一款面向服务端应用的垃圾收集器。具有如下特点：</p>
+<ul>
+<li>并发与并行：能充分利用多CPU、多核环境的优势，缩短StopTheWorld（停止所有用户线程）的停顿时间，能通过并发的方式让Java程序继续执行。</li>
+<li>分代收集：G1可以自己独立管理整个GC堆不需要配合，不过还是保留了分代概念。</li>
+<li>空间整合：GC时能保证不产生内存空间碎片，收集后能提供规整可用内存。有利于程序长时间运行。不会因为大对象分配不到连续内存而促发下一次GC。</li>
+<li>可预测的停顿：会建立可预测的停顿时间模型，让使用者明确指定在一个长度为M毫秒的时间片段内，GC时间不超过N毫秒。</li>
+</ul>
+<p>G1大致运行步骤有如下几步：</p>
+<ul>
+<li>初始标记</li>
+<li>并发标记</li>
+<li>最终标记</li>
+<li>筛选标记</li>
+</ul>
+<p>和CMS不同的是，最终标记中，会把有发生变化的对象记录在线程Remembered Set Logs里面，最终标记阶段需要把该Logs的数据合并到Remembered Set中，需要停顿，但也可以并行执行。最后在筛选回收阶段首先对各个Region的回收价值和成本进行排序，根据用户期望的GC停顿时间来制定回收计划。</p>
+<p><img src="http://obl32g9cf.bkt.clouddn.com/G1.png" alt="G1流程示意图"></p>
+<h1 id="垃圾收集器参数总结"><a href="#垃圾收集器参数总结" class="headerlink" title="垃圾收集器参数总结"></a>垃圾收集器参数总结</h1><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UseSerialGC</td>
+<td>虚拟机运行在Client模式下的默认值，打开此开关后，使用Serial+Serial Old的收集器组合进行内存回收</td>
+</tr>
+<tr>
+<td>UseParNewGC</td>
+<td>打开此开关后，使用ParNew+Serial Old的收集器组合进行内存回收</td>
+</tr>
+<tr>
+<td>UseConcMarkSweepGC</td>
+<td>打开此开关后，使用ParNew+CMS+Serial Old的收集器组合进行内存回收。Serial Old讲做为CMS收集器出现Concurrent Mode Failure失败后的备用收集器使用。</td>
+</tr>
+<tr>
+<td>UseParallelGC</td>
+<td>虚拟机运行在Server模式下的默认值。打开后默认使用Parallel Scavenge+Serial Old（PS MarkSweep）的收集器组合进行内存回收。</td>
+</tr>
+<tr>
+<td>SurvivorRatio</td>
+<td>新生代中Eden区域和Survivor区域的容量比值，默认为8，代表Eden：Survivor=8:1</td>
+</tr>
+<tr>
+<td>PretenureSizeThreshold</td>
+<td>直接晋升到老年代的对象大小，设置这个参数后，大于这个参数的对象之间在老年代分配</td>
+</tr>
+<tr>
+<td>MaxTenuringThreshold</td>
+<td>晋升到老年代的对象年龄。每个对象在坚持过一次Minor GC后，年龄+1，当超过这个参数值就进入老年代。</td>
+</tr>
+<tr>
+<td>UseAdaptiveSizePolicy</td>
+<td>动态调整JAVA堆各个区域的大小以及进入老年代的年龄</td>
+</tr>
+<tr>
+<td>HandlePromotionFailure</td>
+<td>是否允许分配担保失败，即老年代的剩余空间不足以应对新生代的整个Eden和Survivor区的所有对象存活的极端情况。</td>
+</tr>
+<tr>
+<td>ParallelGCThreads</td>
+<td>设置并行GC时进行内存回收的线程数</td>
+</tr>
+<tr>
+<td>GCTimeRation</td>
+<td>GC时间占总时间的比率，默认值为99，即允许1%的GC时间，仅仅在使用Parallel Scavenge收集器时生效。</td>
+</tr>
+<tr>
+<td>MaxGCPauseMillis</td>
+<td>设置GC的最大停顿时间，仅仅在使用Parallel Scavenge收集器时生效。</td>
+</tr>
+<tr>
+<td>CMSInitiatingOccupancyFraction</td>
+<td>设置CMS收集器在老年代空间被使用多少后触发垃圾收集。默认为68%，仅在使用CMS收集器生效。</td>
+</tr>
+<tr>
+<td>UseCMSCompactAtFullCollection</td>
+<td>设置CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理。仅在CMS收集器使用时生效。</td>
+</tr>
+<tr>
+<td>CMSFullGCsBeforeCompaction</td>
+<td>设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理。仅在使用CMS收集器时生效。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>并行：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态。</li>
+<li>并发：指用户线程与垃圾收集线程同时执行（不一定是并行，可能是交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java虚拟机，垃圾收集器/" rel="tag"># java虚拟机，垃圾收集器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Java虚拟机/5、HotSpot的算法实现/" rel="next" title="5、HotSpot的算法实现">
+                <i class="fa fa-chevron-left"></i> 5、HotSpot的算法实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/web容器/tomcat修改项目访问名称/" rel="prev" title="tomcat修改访问的项目名称">
+                tomcat修改访问的项目名称 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="Java虚拟机/6、垃圾收集器/"
+           data-title="6、垃圾收集器" data-url="http://jarvishuang.com/Java虚拟机/6、垃圾收集器/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">黄自豪</p>
+              <p class="site-description motion-element" itemprop="description">任何令人向往的地方都不会有捷径！</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial收集器"><span class="nav-number">1.</span> <span class="nav-text">Serial收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ParNew收集器"><span class="nav-number">2.</span> <span class="nav-text">ParNew收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Scavenge收集器"><span class="nav-number">3.</span> <span class="nav-text">Parallel Scavenge收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serial-Old收集器"><span class="nav-number">4.</span> <span class="nav-text">Serial Old收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parallel-Old收集器"><span class="nav-number">5.</span> <span class="nav-text">Parallel Old收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMS收集器"><span class="nav-number">6.</span> <span class="nav-text">CMS收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#G1收集器"><span class="nav-number">7.</span> <span class="nav-text">G1收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾收集器参数总结"><span class="nav-number">8.</span> <span class="nav-text">垃圾收集器参数总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄自豪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jarviskent"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
