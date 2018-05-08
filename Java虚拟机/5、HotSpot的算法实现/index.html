@@ -95,7 +95,7 @@
 枚举根结点根据可达性分析算法，GC的时候从GC Roots节点开始找引用链的，而做为GC Roots的节点主要是在全局性引用与执行上下文中，如果逐个检查的话，必然是需要耗费很多时间的。
 而执行GC的时候，所有线程是必然要停顿的。因为在执行时，如果对象的引用关系还在不断变化，就无法准确的进行GC了。
 不过，主流的虚拟机现">
-<meta property="og:updated_time" content="2018-05-08T02:06:50.000Z">
+<meta property="og:updated_time" content="2018-05-08T08:24:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="5、HotSpot的算法实现">
 <meta name="twitter:description" content="前面了解关于对象的生死判定和垃圾收集算法，而在HotSpot中是怎么实现的呢？
@@ -324,6 +324,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">Java虚拟机</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -538,7 +560,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
